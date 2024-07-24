@@ -1,89 +1,184 @@
-const express = require('express');
-const axios = require('axios');
-const path = require('path');
-const cors = require('cors'); // Import CORS
-const app = express();
-const PORT = process.env.PORT || 3000;
+const BASE_URL = 'https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/';
 
-// Enable CORS
-app.use(cors());
-
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Global Exports 데이터 가져오기
-const fetchGlobalExports = async () => {
-    const url = "https://www.econdb.com/widgets/global-trade/data/?type=export&net=0&transform=0";
-    const response = await axios.get(url);
-    if (response.status === 200) {
-        const data = response.data;
-        if (data.plots && data.plots.length > 0) {
-            return data.plots[0].data;
+async function fetchData(endpoint) {
+    try {
+        const response = await fetch(`${BASE_URL}${endpoint}`);
+        if (response.ok) {
+            const data = await response.json();
+            console.log(`${endpoint} data:`, data); // Check if data is correct
+            return data;
+        } else {
+            console.error('Failed to fetch:', response.status);
         }
+    } catch (error) {
+        console.error('Error:', error);
     }
     return null;
-};
+}
 
-// SCFI 데이터 가져오기
-const fetchScfi = async () => {
-    const url = "https://www.econdb.com/widgets/shanghai-containerized-index/data/";
-    const response = await axios.get(url);
-    if (response.status === 200) {
-        const data = response.data;
-        if (data.plots && data.plots.length > 0) {
-            return data.plots[0].data;
+async function renderCharts() {
+    // Fetch data
+    const globalExportsData = await fetchData('global-exports');
+    const scfiData = await fetchData('scfi');
+    const portComparisonData = await fetchData('port-comparison');
+    const portData = await fetchData('port-data');
+
+    // Global Exports Chart
+    const globalExportsCtx = document.getElementById('globalExportsChart').getContext('2d');
+    new Chart(globalExportsCtx, {
+        type: 'line',
+        data: {
+            labels: globalExportsData ? globalExportsData.map(item => item.Date) : [],
+            datasets: [
+                {
+                    label: 'Africa',
+                    data: globalExportsData ? globalExportsData.map(item => item.Africa) : [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true
+                },
+                {
+                    label: 'East Asia',
+                    data: globalExportsData ? globalExportsData.map(item => item['East Asia']) : [],
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    fill: true
+                },
+                {
+                    label: 'Europe',
+                    data: globalExportsData ? globalExportsData.map(item => item.Europe) : [],
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Value'
+                    }
+                }
+            }
         }
-    }
-    return null;
-};
+    });
 
-// Top Port Comparison 데이터 가져오기
-const fetchPortComparison = async () => {
-    const url = "https://www.econdb.com/widgets/top-port-comparison/data/";
-    const response = await axios.get(url);
-    if (response.status === 200) {
-        const data = response.data;
-        if (data.plots && data.plots.length > 0) {
-            return data.plots[0].data;
+    // SCFI Chart
+    const scfiCtx = document.getElementById('scfiChart').getContext('2d');
+    new Chart(scfiCtx, {
+        type: 'line',
+        data: {
+            labels: scfiData ? scfiData.map(item => item.Date) : [],
+            datasets: [{
+                label: 'Price',
+                data: scfiData ? scfiData.map(item => item.price) : [],
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Price'
+                    }
+                }
+            }
         }
-    }
-    return null;
-};
+    });
 
-// 포트 데이터 가져오기
-const fetchPortData = async () => {
-    const url = "https://www.econdb.com/maritime/search/ports/?ab=-62.933895117588925%2C-138.84538637063213%2C75.17530232751466%2C150.31476987936844&center=17.35344883620718%2C5.734691754366622";
-    const headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    };
-    const response = await axios.get(url, { headers });
-    if (response.status === 200) {
-        return response.data.response.docs;
-    }
-    return null;
-};
+    // Top Port Comparison Chart
+    const portComparisonCtx = document.getElementById('portComparisonChart').getContext('2d');
+    new Chart(portComparisonCtx, {
+        type: 'bar',
+        data: {
+            labels: portComparisonData ? portComparisonData.map(item => item.name) : [],
+            datasets: [
+                {
+                    label: 'June 24',
+                    data: portComparisonData ? portComparisonData.map(item => item['June 24']) : [],
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'June 23',
+                    data: portComparisonData ? portComparisonData.map(item => item['June 23']) : [],
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Port'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'TEU'
+                    }
+                }
+            }
+        }
+    });
 
-// 엔드포인트 설정
-app.get('/global-exports', async (req, res) => {
-    const data = await fetchGlobalExports();
-    res.json(data);
-});
+    // Port Data Chart
+    const portDataCtx = document.getElementById('portDataChart').getContext('2d');
+    new Chart(portDataCtx, {
+        type: 'doughnut',
+        data: {
+            labels: portData ? portData.map(item => item.name) : [],
+            datasets: [{
+                label: 'Global Trade',
+                data: portData ? portData.map(item => item.global_trade) : [],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+}
 
-app.get('/scfi', async (req, res) => {
-    const data = await fetchScfi();
-    res.json(data);
-});
-
-app.get('/port-comparison', async (req, res) => {
-    const data = await fetchPortComparison();
-    res.json(data);
-});
-
-app.get('/port-data', async (req, res) => {
-    const data = await fetchPortData();
-    res.json(data);
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+document.addEventListener('DOMContentLoaded', renderCharts);
