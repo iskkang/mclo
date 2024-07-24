@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .data-section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Logistics Data</h1>
+
+        <div class="data-section">
+            <h2>Global Exports</h2>
+            <div id="global-exports">Loading...</div>
+        </div>
+
+        <div class="data-section">
+            <h2>SCFI</h2>
+            <div id="scfi">Loading...</div>
+        </div>
+
+        <div class="data-section">
+            <h2>Top Port Comparison</h2>
+            <div id="port-comparison">Loading...</div>
+        </div>
+
+        <div class="data-section">
+            <h2>Port Data</h2>
+            <div id="port-data">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchData(endpoint, elementId) {
+            try {
+                const response = await fetch(`http://localhost:3000/${endpoint}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById(elementId).textContent = JSON.stringify(data, null, 2);
+                } else {
+                    document.getElementById(elementId).textContent = 'Error fetching data.';
+                }
+            } catch (error) {
+                document.getElementById(elementId).textContent = 'Error fetching data.';
+                console.error('Error:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData('global-exports', 'global-exports');
+            fetchData('scfi', 'scfi');
+            fetchData('port-comparison', 'port-comparison');
+            fetchData('port-data', 'port-data');
+        });
+    </script>
+</body>
+</html>
