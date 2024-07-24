@@ -5,7 +5,6 @@ async function fetchData(endpoint) {
         const response = await fetch(`${BASE_URL}${endpoint}`);
         if (response.ok) {
             const data = await response.json();
-            console.log(`${endpoint} data:`, data); // Check if data is correct
             return data;
         } else {
             console.error('Failed to fetch:', response.status);
@@ -17,168 +16,144 @@ async function fetchData(endpoint) {
 }
 
 async function renderCharts() {
-    // Fetch data
+    // Fetch data from updated endpoints
     const globalExportsData = await fetchData('global-exports');
     const scfiData = await fetchData('scfi');
     const portComparisonData = await fetchData('port-comparison');
     const portData = await fetchData('port-data');
+    
+    // SCFI Chart
+    if (scfiData && scfiData.plots && scfiData.plots.length > 0) {
+        const scfiPlot = scfiData.plots[0].data;
+        const scfiDates = scfiPlot.map(item => item.Date);
+        const scfiValues = scfiPlot.map(item => item.price);
+
+        const scfiTrace = {
+            x: scfiDates,
+            y: scfiValues,
+            type: 'scatter',
+            mode: 'lines+markers',
+            marker: { color: 'blue' }
+        };
+
+        const scfiLayout = {
+            title: 'Shanghai Containerized Freight Index (SCFI)',
+            xaxis: { title: 'Date' },
+            yaxis: { title: 'SCFI Value' }
+        };
+
+        Plotly.newPlot('scfiChart', [scfiTrace], scfiLayout);
+    }
+
+    // Port Comparison Chart
+    if (portComparisonData && portComparisonData.plots && portComparisonData.plots.length > 0) {
+        const portData = portComparisonData.plots[0].data;
+        const portNames = portData.map(item => item.name);
+        const portValuesJune24 = portData.map(item => item['June 24']);
+        const portValuesJune23 = portData.map(item => item['June 23']);
+
+        const portTraceJune24 = {
+            x: portNames,
+            y: portValuesJune24,
+            type: 'bar',
+            name: 'June 24',
+            marker: { color: 'orange' }
+        };
+
+        const portTraceJune23 = {
+            x: portNames,
+            y: portValuesJune23,
+            type: 'bar',
+            name: 'June 23',
+            marker: { color: 'blue' }
+        };
+
+        const portLayout = {
+            title: 'Top Port Comparison (June 24 vs June 23)',
+            xaxis: { title: 'Port' },
+            yaxis: { title: 'Thousand TEU' },
+            barmode: 'group'
+        };
+
+        Plotly.newPlot('portComparisonChart', [portTraceJune24, portTraceJune23], portLayout);
+    }
 
     // Global Exports Chart
-    const globalExportsCtx = document.getElementById('globalExportsChart').getContext('2d');
-    new Chart(globalExportsCtx, {
-        type: 'line',
-        data: {
-            labels: globalExportsData ? globalExportsData.map(item => item.Date) : [],
-            datasets: [
-                {
-                    label: 'Africa',
-                    data: globalExportsData ? globalExportsData.map(item => item.Africa) : [],
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    fill: true
-                },
-                {
-                    label: 'East Asia',
-                    data: globalExportsData ? globalExportsData.map(item => item['East Asia']) : [],
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                    fill: true
-                },
-                {
-                    label: 'Europe',
-                    data: globalExportsData ? globalExportsData.map(item => item.Europe) : [],
-                    borderColor: 'rgba(255, 159, 64, 1)',
-                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                    fill: true
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Value'
-                    }
-                }
-            }
-        }
-    });
+    if (globalExportsData && globalExportsData.plots && globalExportsData.plots.length > 0) {
+        const globalExportsPlot = globalExportsData.plots[0].data;
+        const exportDates = globalExportsPlot.map(item => item.Date);
+        const exportValues = globalExportsPlot.map(item => item.value);
 
-    // SCFI Chart
-    const scfiCtx = document.getElementById('scfiChart').getContext('2d');
-    new Chart(scfiCtx, {
-        type: 'line',
-        data: {
-            labels: scfiData ? scfiData.map(item => item.Date) : [],
-            datasets: [{
-                label: 'Price',
-                data: scfiData ? scfiData.map(item => item.price) : [],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Month'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Price'
-                    }
-                }
-            }
-        }
-    });
+        const exportsTrace = {
+            x: exportDates,
+            y: exportValues,
+            type: 'bar',
+            marker: { color: 'green' }
+        };
 
-    // Top Port Comparison Chart
-    const portComparisonCtx = document.getElementById('portComparisonChart').getContext('2d');
-    new Chart(portComparisonCtx, {
-        type: 'bar',
-        data: {
-            labels: portComparisonData ? portComparisonData.map(item => item.name) : [],
-            datasets: [
-                {
-                    label: 'June 24',
-                    data: portComparisonData ? portComparisonData.map(item => item['June 24']) : [],
-                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                    borderColor: 'rgba(255, 159, 64, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'June 23',
-                    data: portComparisonData ? portComparisonData.map(item => item['June 23']) : [],
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Port'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'TEU'
-                    }
-                }
-            }
-        }
-    });
+        const exportsLayout = {
+            title: 'Global Exports (TEU by Week)',
+            xaxis: { title: 'Date' },
+            yaxis: { title: 'TEU' }
+        };
+
+        Plotly.newPlot('globalTradeChart', [exportsTrace], exportsLayout);
+    }
 
     // Port Data Chart
-    const portDataCtx = document.getElementById('portDataChart').getContext('2d');
-    new Chart(portDataCtx, {
-        type: 'doughnut',
-        data: {
-            labels: portData ? portData.map(item => item.name) : [],
-            datasets: [{
-                label: 'Global Trade',
-                data: portData ? portData.map(item => item.global_trade) : [],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
+    if (portData && portData.plots && portData.plots.length > 0) {
+        const portPlot = portData.plots[0].data;
+        const portNames = portPlot.map(item => item.name);
+        const portValues = portPlot.map(item => item.value);
+
+        const portTrace = {
+            x: portNames,
+            y: portValues,
+            type: 'bar',
+            marker: { color: 'purple' }
+        };
+
+        const portLayout = {
+            title: 'Port Data Overview',
+            xaxis: { title: 'Port' },
+            yaxis: { title: 'Value' }
+        };
+
+        Plotly.newPlot('portStatusChart', [portTrace], portLayout);
+    }
+
+    // Latest News
+    const newsKeywords = ["해상운임", "항공운임", "철도", "물류", "Shipping"];
+    const newsContainer = document.getElementById('newsContainer');
+    for (const keyword of newsKeywords) {
+        const newsResponse = await fetch(`https://news.google.com/search?q=${keyword}&hl=ko&gl=KR&ceid=KR:ko`);
+        const newsHtml = await newsResponse.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(newsHtml, 'text/html');
+        const articles = doc.querySelectorAll('article');
+
+        articles.forEach(article => {
+            const source = article.querySelector('.vr1PYe')?.textContent || 'No Source';
+            const titleTag = article.querySelector('a.JtKRv');
+            const title = titleTag?.textContent || 'No Title';
+            const link = titleTag ? 'https://news.google.com' + titleTag.getAttribute('href').substring(1) : 'No Link';
+            const thumbnailTag = article.querySelector('img.Quavad');
+            const thumbnail = thumbnailTag ? (thumbnailTag.src.startsWith('/') ? 'https://news.google.com' + thumbnailTag.src : thumbnailTag.src) : 'https://via.placeholder.com/300x150?text=No+Image';
+            const dateTag = article.querySelector('time.hvbAAd');
+            const date = dateTag ? dateTag.getAttribute('datetime') : 'No Date';
+
+            const newsHtml = `
+                <div class="card">
+                    <img src="${thumbnail}" alt="${title}">
+                    <h4><b>${title}</b></h4>
+                    <p>출처: ${source}</p>
+                    <p>날짜: ${date}</p>
+                    <a href="${link}" target="_blank">기사 읽기</a>
+                </div>
+            `;
+            newsContainer.innerHTML += newsHtml;
+        });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', renderCharts);
