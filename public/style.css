@@ -1,0 +1,25 @@
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.chart-container {
+    margin-bottom: 40px;
+}
+
+canvas {
+    width: 100% !important; /* Ensures that the canvas fits the container */
+    height: 400px; /* Adjust height as needed */
+}
