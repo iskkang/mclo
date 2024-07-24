@@ -49,7 +49,7 @@
     <script>
         async function fetchData(endpoint, elementId) {
             try {
-                const response = await fetch(`http://localhost:3000/${endpoint}`);
+                const response = await fetch(`https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/${endpoint}`);
                 if (response.ok) {
                     const data = await response.json();
                     document.getElementById(elementId).textContent = JSON.stringify(data, null, 2);
