@@ -1,8 +1,12 @@
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
+const cors = require('cors'); // Import CORS
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Enable CORS
+app.use(cors());
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
