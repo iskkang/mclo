@@ -85,14 +85,31 @@
             new Chart(globalExportsCtx, {
                 type: 'line',
                 data: {
-                    labels: globalExportsData ? globalExportsData.map(item => item.date) : [],
-                    datasets: [{
-                        label: 'Global Exports',
-                        data: globalExportsData ? globalExportsData.map(item => item.value) : [],
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true
-                    }]
+                    labels: globalExportsData ? globalExportsData.map(item => item.Date) : [],
+                    datasets: [
+                        {
+                            label: 'Africa',
+                            data: globalExportsData ? globalExportsData.map(item => item.Africa) : [],
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: true
+                        },
+                        {
+                            label: 'East Asia',
+                            data: globalExportsData ? globalExportsData.map(item => item['East Asia']) : [],
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            fill: true
+                        },
+                        {
+                            label: 'Europe',
+                            data: globalExportsData ? globalExportsData.map(item => item.Europe) : [],
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                            fill: true
+                        },
+                        // Add other regions as needed
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -118,12 +135,12 @@
             new Chart(scfiCtx, {
                 type: 'line',
                 data: {
-                    labels: scfiData ? scfiData.map(item => item.date) : [],
+                    labels: scfiData ? scfiData.map(item => item.Date) : [],
                     datasets: [{
-                        label: 'SCFI Index',
-                        data: scfiData ? scfiData.map(item => item.value) : [],
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        label: 'Price',
+                        data: scfiData ? scfiData.map(item => item.price) : [],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         fill: true
                     }]
                 },
@@ -133,13 +150,13 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Date'
+                                text: 'Month'
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Index'
+                                text: 'Price'
                             }
                         }
                     }
@@ -151,14 +168,23 @@
             new Chart(portComparisonCtx, {
                 type: 'bar',
                 data: {
-                    labels: portComparisonData ? portComparisonData.map(item => item.port) : [],
-                    datasets: [{
-                        label: 'Port Comparison',
-                        data: portComparisonData ? portComparisonData.map(item => item.value) : [],
-                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        borderWidth: 1
-                    }]
+                    labels: portComparisonData ? portComparisonData.map(item => item.name) : [],
+                    datasets: [
+                        {
+                            label: 'June 24',
+                            data: portComparisonData ? portComparisonData.map(item => item['June 24']) : [],
+                            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'June 23',
+                            data: portComparisonData ? portComparisonData.map(item => item['June 23']) : [],
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -172,7 +198,7 @@
                         y: {
                             title: {
                                 display: true,
-                                text: 'Value'
+                                text: 'TEU'
                             }
                         }
                     }
@@ -184,12 +210,26 @@
             new Chart(portDataCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: portData ? portData.map(item => item.port) : [],
+                    labels: portData ? portData.map(item => item.name) : [],
                     datasets: [{
-                        label: 'Port Data',
-                        data: portData ? portData.map(item => item.value) : [],
-                        backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)'],
-                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'],
+                        label: 'Global Trade',
+                        data: portData ? portData.map(item => item.global_trade) : [],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
                         borderWidth: 1
                     }]
                 },
