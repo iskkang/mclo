@@ -26,8 +26,6 @@ async function renderCharts() {
     const scfiData = await fetchData('scfi');
     const portComparisonData = await fetchData('port-comparison');
     const portData = await fetchData('port-data');
-
-    const portData = portDataResponse?.response?.docs || [];
     
     // SCFI Chart
     if (scfiDataResponse && scfiDataResponse.plots && scfiDataResponse.plots.length > 0) {
