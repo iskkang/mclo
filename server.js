@@ -88,6 +88,19 @@ const fetchPortData = async () => {
     return null;
 };
 
+const fetchPortmap = async () => {
+    const url = "https://www.econdb.com/maritime/search/ports/?ab=-62.933895117588925%2C-138.84538637063213%2C75.17530232751466%2C150.31476987936844&center=17.35344883620718%2C5.734691754366622";
+    const headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    };
+    const response = await axios.get(url, { headers });
+    if (response.status === 200) {
+        return response.data.response.docs;
+    }
+    return null;
+};
+
+
 // Endpoints for data fetching
 app.get('/global-exports', async (req, res) => {
     const data = await fetchGlobalExports();
@@ -108,6 +121,12 @@ app.get('/port-data', async (req, res) => {
     const data = await fetchPortData();
     res.json(data);
 });
+
+app.get('/port-map', async (req, res) => {
+    const data = await fetchPortmap();
+    res.json(data);
+});
+
 
 // Serve index.html for all routes to support client-side routing
 app.get('*', (req, res) => {
