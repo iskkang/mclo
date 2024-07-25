@@ -1,6 +1,6 @@
 const BASE_URL = 'https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/';
 
-mapboxgl.accessToken = 'pk.eyJ1Ijoic3RhcmJveCIsImEiOiJjbGY2cTNrNnkwNTNxM3FwYzlpOXpzbjltIn0.vVmIud2QqMy_sm51bxZCDg';
+mapboxgl.accessToken = 'pk.eyJ1Ijoic3RhcmJveCIsImEiOiJjbHoweDNmdzgzMHB4MnFzNjVpbTNlcGsyIn0.4Clk502C_svsGBm6RRVCjg';
 
 
 async function fetchData(endpoint) {
