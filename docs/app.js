@@ -130,11 +130,8 @@ async function renderCharts() {
                 <td>${item.last_export_teu?.toLocaleString() || 'N/A'}</td>
                 <td>${item.last_import_teu_mom?.toFixed(1) || 'N/A'}%</td>
                 <td>${item.last_export_teu_mom?.toFixed(1) || 'N/A'}%</td>
-                <td>${item.turnaround}</td>
                 <td>${item.transshipments.toFixed(1)}</td>
                 <td>${item.vessels_berthed}</td>
-                <td>${item.port_congestion}</td>
-                <td>${item.schedule}</td>
                 <td>${item.delay_percent.toFixed(1)}%</td>
                 <td>${item.import_dwell_time.toFixed(1)}</td>
                 <td>${item.export_dwell_time.toFixed(1)}</td>
