@@ -119,15 +119,14 @@ async function renderCharts() {
     }
 
     // Port Data Table
-    if (portDataResponse && portDataResponse.response && portDataResponse.response.docs) {
-        const portData = portDataResponse.response.docs;
+    if (portDataResponse && portDataResponse.length > 0) {
+        const portData = portDataResponse;
         const tableBody = document.getElementById('portTableBody');
         portData.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.rank}</td>
                 <td>${item.name}</td>
-                <td>${item.locode}</td>
                 <td>${item.last_import_teu.toLocaleString()}</td>
                 <td>${item.last_export_teu?.toLocaleString() || 'N/A'}</td>
                 <td>${item.last_import_teu_mom?.toFixed(1) || 'N/A'}%</td>
@@ -153,8 +152,8 @@ async function renderCharts() {
     });
 
     // Add port icons
-    if (portDataResponse && portDataResponse.response && portDataResponse.response.docs) {
-        const portData = portDataResponse.response.docs;
+    if (portDataResponse && portDataResponse.length > 0) {
+        const portData = portDataResponse;
         portData.forEach(item => {
             const el = document.createElement('div');
             el.className = 'marker';
