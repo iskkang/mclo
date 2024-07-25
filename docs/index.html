@@ -14,7 +14,6 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
-    <script src="app.js" defer></script>
     <style>
         body {
             font-family: "Noto Sans KR", sans-serif;
@@ -51,8 +50,8 @@
             cursor: pointer;
         }
         #map {
-            width: 457px;
-            height: 271px;
+            width: 100%;
+            height: 500px;
         }
     </style>
 </head>
@@ -88,8 +87,7 @@
     
     <h2>World Map</h2>
     <div id="map"></div>
-    
-    
+
     <h2>News</h2>
     <div class="news-buttons">
         <button onclick="loadNews('해상운임')">해상운임</button>
@@ -100,6 +98,14 @@
     </div>
     <div id="newsContainer"></div>
     <button id="moreButton" onclick="loadMoreNews()" style="display: none;">More</button>
+
+    <script src="./app.js"></script>
+    <script src="./map.js"></script>
+    <script src="./news.js"></script>
+    <script src="./scfi.js"></script>
+    <script src="./portComparison.js"></script>
+    <script src="./globalExports.js"></script>
+    <script src="./portDataTable.js"></script>
 
 </body>
 </html>
