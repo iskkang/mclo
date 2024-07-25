@@ -82,17 +82,15 @@ async function renderCharts() {
     }
 
     // Global Exports Chart
-    if (globalExportsData && globalExportsData.plots && globalExportsData.plots.length > 0) {
-        const series = globalExportsData.plots[0].series;
-        const data = globalExportsData.plots[0].data;
-        const exportDates = data.map(item => item.Date);
+    if (globalExportsData && globalExportsData.length > 0) {
+        const exportDates = globalExportsData.map(item => item.Date);
+        const regions = Object.keys(globalExportsData[0]).filter(key => key !== 'Date');
 
-        const traces = series.map(serie => ({
+        const traces = regions.map(region => ({
             x: exportDates,
-            y: data.map(item => item[serie.code]),
+            y: globalExportsData.map(item => item[region]),
             type: 'bar',
-            name: serie.name,
-            marker: { color: serie.color || 'random' },
+            name: region,
             hoverinfo: 'x+y',
         }));
 
@@ -109,7 +107,6 @@ async function renderCharts() {
     } else {
         console.error('Invalid globalExportsData structure:', globalExportsData);
     }
-
 
     // Port Data Chart
     if (portData && portData.length > 0) {
