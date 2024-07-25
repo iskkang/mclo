@@ -6,7 +6,6 @@ const dotenv = require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const { GoogleGenerativeAIA, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 // Initialize the app
 const app = express();
