@@ -39,8 +39,7 @@ async function renderCharts() {
             y: scfiData.map(item => item[serie.code]),
             type: 'scatter',
             mode: 'lines+markers',
-            name: serie.name,
-            marker: { color: serie.color }
+            name: serie.name
         }));
 
         const scfiLayout = {
@@ -99,7 +98,7 @@ async function renderCharts() {
             y: globalExportsData.map(item => item[region]),
             type: 'bar',
             name: region,
-            hoverinfo: 'x+y',
+            hoverinfo: 'x+y'
         }));
 
         const exportsLayout = {
@@ -141,48 +140,42 @@ async function renderCharts() {
         $('#portTable').DataTable();
     }
 
-    // Initialize Mapbox
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [5.734691754366622, 17.35344883620718],
-        zoom: 2
-    });
+    // Initialize Leaflet
+    const map = L.map('map').setView([17.35344883620718, 5.734691754366622], 2);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
     // Add port icons
     if (portDataResponse && portDataResponse.length > 0) {
         const portData = portDataResponse;
         portData.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'marker';
-            el.style.backgroundImage = 'url(https://www.econdb.com/static/assets/pics/mapbox/port-top.png)';
-            el.style.width = '30px';
-            el.style.height = '30px';
-            el.style.backgroundSize = '100%';
+            const marker = L.marker(item.coord.split(',').map(Number), {
+                icon: L.icon({
+                    iconUrl: 'https://www.econdb.com/static/assets/pics/mapbox/port-top.png',
+                    iconSize: [30, 30]
+                })
+            }).addTo(map);
 
-            const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+            marker.bindPopup(`
                 <h4>${item.name}</h4>
                 <p>Country: ${item.country}</p>
                 <p>Rank: ${item.rank}</p>
             `);
 
-            el.addEventListener('click', async () => {
+            marker.on('click', async () => {
                 const portDetails = await fetchPortDetails(item.locode);
                 if (portDetails) {
                     const { name, country, rank } = portDetails.meta;
-                    popup.setHTML(`
+                    marker.bindPopup(`
                         <h4>${name}</h4>
                         <p>Country: ${country}</p>
                         <p>Rank: ${rank}</p>
-                    `);
-                    popup.addTo(map);
+                    `).openPopup();
                 }
             });
-
-            new mapboxgl.Marker(el)
-                .setLngLat(item.coord.split(',').map(Number))
-                .setPopup(popup)
-                .addTo(map);
         });
     }
 }
