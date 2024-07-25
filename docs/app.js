@@ -142,23 +142,36 @@ async function renderCharts() {
         $('#portTable').DataTable();
     }
 
-    // Initialize Leaflet
+    // Initialize OpenLayers map
     initializeMap();
 }
 
 function initializeMap() {
-    const mymap = L.map('mapid').setView([17.35344883620718, 5.734691754366622], 2);
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([5.734691754366622, 17.35344883620718]),
+            zoom: 2
+        })
+    });
 
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 3,
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1IjoiZm9ycm9oIiwiYSI6ImNrZG1vemxidTBldjMzM3Fucmpjbm5pemwifQ.KYk_qkWYkDNX0jYFzUzcIQ'
-    }).addTo(mymap);
+    var marker = new ol.Overlay({
+        position: ol.proj.fromLonLat([127.00, 37.00]),
+        positioning: 'center-center',
+        element: document.createElement('div'),
+        stopEvent: false
+    });
 
-    var marker = L.marker([37.00, 127.00]).addTo(mymap);
+    marker.getElement().style.backgroundImage = 'url(https://openlayers.org/en/v6.6.1/examples/data/icon.png)';
+    marker.getElement().style.width = '32px';
+    marker.getElement().style.height = '32px';
+
+    map.addOverlay(marker);
 }
 
 async function fetchPortDetails(locode) {
