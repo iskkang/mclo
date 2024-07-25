@@ -29,26 +29,32 @@ async function renderCharts() {
     
     // SCFI Chart
     if (scfiData && scfiData.length > 0) {
+        const series = [
+            {code: "price", name: "Future (prompt month)", color: "red"},
+            {code: "SCSFI_EU", name: "Observed", color: "green"},
+            {code: "Forward curve", name: "Forward curve (Jul-24)", color: "blue"},
+            {code: "wkago", name: "Forward curve (Jul-17)", color: "orange"}
+        ];
+        
         const scfiDates = scfiData.map(item => item.Date);
-        const scfiValues = scfiData.map(item => item.price);
-
-        const scfiTrace = {
+        
+        const traces = series.map(serie => ({
             x: scfiDates,
-            y: scfiValues,
+            y: scfiData.map(item => item[serie.code]),
             type: 'scatter',
             mode: 'lines+markers',
-            marker: { color: 'blue' }
-        };
-
+            name: serie.name,
+            marker: { color: serie.color }
+        }));
+        
         const scfiLayout = {
             title: 'Shanghai Containerized Freight Index (SCFI)',
             xaxis: { title: 'Date' },
             yaxis: { title: 'SCFI Value' }
         };
 
-        Plotly.newPlot('scfiChart', [scfiTrace], scfiLayout);
+        Plotly.newPlot('scfiChart', traces, scfiLayout);
     }
-
     // Port Comparison Chart
     if (portComparisonData && portComparisonData.length > 0) {
         const portNames = portComparisonData.map(item => item.name);
