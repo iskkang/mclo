@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     initializeMap();
-    renderCharts();
+    renderSCFIChart();
+    renderPortComparisonChart();
+    renderGlobalExportsChart();
+    renderPortDataTable();
     loadNews('해상운임'); // Load initial news category
 });
 
