@@ -13,10 +13,10 @@
     "express": "^4.17.1",
     "http-proxy-middleware": "^2.0.1",
     "path": "^0.12.7",
-    "mapbox-gl": "^2.3.1"
+    "mapbox-gl": "^2.3.1",
+    "leaflet": "^1.7.1"
   },
   "devDependencies": {
-    "leaflet": "1.7.1"
   },
   "author": "Issan Kang",
   "license": "ISC"
