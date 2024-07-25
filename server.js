@@ -5,11 +5,10 @@ const cors = require('cors');
 const dotenv = require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
-const { GoogleGenerativeAIA, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 // Initialize the app
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000; // Changed port to 4000
 
 // CORS configuration
 let corsOptions = {
