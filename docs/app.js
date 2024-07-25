@@ -1,5 +1,8 @@
 const BASE_URL = 'https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/';
 
+mapboxgl.accessToken = 'pk.eyJ1Ijoic3RhcmJveCIsImEiOiJjbGY2cTNrNnkwNTNxM3FwYzlpOXpzbjltIn0.vVmIud2QqMy_sm51bxZCDg';
+
+
 async function fetchData(endpoint) {
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, {
@@ -141,6 +144,68 @@ async function renderCharts() {
         $('#portTable').DataTable();
     }
 }
+
+  // Initialize Mapbox
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [5.734691754366622, 17.35344883620718],
+        zoom: 2
+    });
+
+   // Add port icons
+    if (portDataResponse && portDataResponse.response && portDataResponse.response.docs) {
+        const portData = portDataResponse.response.docs;
+        portData.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'marker';
+            el.style.backgroundImage = 'url(https://www.econdb.com/static/assets/pics/mapbox/port-top.png)';
+            el.style.width = '30px';
+            el.style.height = '30px';
+            el.style.backgroundSize = '100%';
+
+            const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+                <h4>${item.name}</h4>
+                <p>Country: ${item.country}</p>
+                <p>Rank: ${item.rank}</p>
+            `);
+
+            el.addEventListener('click', async () => {
+                const portDetails = await fetchPortDetails(item.locode);
+                if (portDetails) {
+                    const { name, country, rank } = portDetails.meta;
+                    popup.setHTML(`
+                        <h4>${name}</h4>
+                        <p>Country: ${country}</p>
+                        <p>Rank: ${rank}</p>
+                    `);
+                    popup.addTo(map);
+                }
+            });
+
+            new mapboxgl.Marker(el)
+                .setLngLat(item.coord.split(',').map(Number))
+                .setPopup(popup)
+                .addTo(map);
+        });
+    }
+}
+
+async function fetchPortDetails(locode) {
+    try {
+        const response = await fetch(`https://www.econdb.com/maritime/ports/async/${encodeURIComponent(locode)}`);
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        } else {
+            console.error('Failed to fetch port details:', response.status);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    return null;
+}
+
 
 let currentKeyword = '';
 let currentPage = 1;
