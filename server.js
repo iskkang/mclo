@@ -5,6 +5,7 @@ const cors = require('cors');
 const dotenv = require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const { GoogleGenerativeAIA, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 // Initialize the app
@@ -22,6 +23,18 @@ app.use(cors(corsOptions));
 // Serve static files from the "docs" directory
 app.use(express.static(path.join(__dirname, 'docs')));
 app.use(express.json());
+
+// Proxy setup for Google News
+app.use(
+    '/api/news',
+    createProxyMiddleware({
+        target: 'https://news.google.com',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/news': '/search'
+        },
+    })
+);
 
 // Fetch data functions
 const fetchGlobalExports = async () => {
@@ -41,10 +54,12 @@ const fetchScfi = async () => {
     const response = await axios.get(url);
     if (response.status === 200) {
         const data = response.data;
-        const series = response.series;
-        const footnote = response.footnote;
         if (data.plots && data.plots.length > 0) {
-            return data.plots[0].data;
+            return {
+                data: data.plots[0].data,
+                series: data.plots[0].series,
+                footnote: data.plots[0].footnote
+            };
         }
     }
     return null;
