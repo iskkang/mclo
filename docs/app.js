@@ -26,7 +26,7 @@ async function renderCharts() {
     const portComparisonData = await fetchData('port-comparison');
     const portDataResponse = await fetchData('port-data');
 
-      // SCFI Chart
+    // SCFI Chart
     if (scfiDataResponse && scfiDataResponse.data && scfiDataResponse.data.length > 0) {
         const scfiData = scfiDataResponse.data;
         const series = scfiDataResponse.series;
@@ -56,7 +56,7 @@ async function renderCharts() {
         footnoteElement.innerText = footnote;
         document.getElementById('scfiChart').appendChild(footnoteElement);
     }
-    
+
     // Port Comparison Chart
     if (portComparisonData && portComparisonData.length > 0) {
         const portNames = portComparisonData.map(item => item.name);
@@ -143,6 +143,10 @@ async function renderCharts() {
     }
 }
 
+let currentKeyword = '';
+let currentPage = 1;
+const articlesPerPage = 10;
+
 async function fetchNews(keyword) {
     const url = `/api/news?q=${keyword}&hl=ko&gl=KR&ceid=KR:ko`;
     try {
@@ -159,39 +163,57 @@ async function fetchNews(keyword) {
     return null;
 }
 
-async function renderNews() {
-    const newsKeywords = ["해상운임", "항공운임", "철도", "물류", "Shipping"];
-    const newsContainer = document.getElementById('newsContainer');
-    for (const keyword of newsKeywords) {
-        const doc = await fetchNews(keyword);
-        if (doc) {
-            const articles = doc.querySelectorAll('article');
-            articles.forEach(article => {
-                const source = article.querySelector('.vr1PYe')?.textContent || 'No Source';
-                const titleTag = article.querySelector('a.JtKRv');
-                const title = titleTag?.textContent || 'No Title';
-                const link = titleTag ? 'https://news.google.com' + titleTag.getAttribute('href').substring(1) : 'No Link';
-                const thumbnailTag = article.querySelector('img.Quavad');
-                const thumbnail = thumbnailTag ? (thumbnailTag.src.startsWith('/') ? 'https://news.google.com' + thumbnailTag.src : thumbnailTag.src) : 'https://via.placeholder.com/300x150?text=No+Image';
-                const dateTag = article.querySelector('time.hvbAAd');
-                const date = dateTag ? dateTag.getAttribute('datetime') : 'No Date';
+async function loadNews(keyword) {
+    currentKeyword = keyword;
+    currentPage = 1;
+    const doc = await fetchNews(keyword);
+    displayNews(doc);
+}
 
-                const newsHtml = `
-                    <div class="card">
-                        <img src="${thumbnail}" alt="${title}">
-                        <h4><b>${title}</b></h4>
-                        <p>출처: ${source}</p>
-                        <p>날짜: ${date}</p>
-                        <a href="${link}" target="_blank">기사 읽기</a>
-                    </div>
-                `;
-                newsContainer.innerHTML += newsHtml;
-            });
-        }
+async function loadMoreNews() {
+    currentPage += 1;
+    const doc = await fetchNews(currentKeyword);
+    displayNews(doc, true);
+}
+
+function displayNews(doc, append = false) {
+    const articles = doc.querySelectorAll('article');
+    const newsContainer = document.getElementById('newsContainer');
+    if (!append) {
+        newsContainer.innerHTML = '';
+    }
+    const start = (currentPage - 1) * articlesPerPage;
+    const end = currentPage * articlesPerPage;
+    articles.slice(start, end).forEach(article => {
+        const source = article.querySelector('.vr1PYe')?.textContent || 'No Source';
+        const titleTag = article.querySelector('a.JtKRv');
+        const title = titleTag?.textContent || 'No Title';
+        const link = titleTag ? 'https://news.google.com' + titleTag.getAttribute('href').substring(1) : 'No Link';
+        const thumbnailTag = article.querySelector('img.Quavad');
+        const thumbnail = thumbnailTag ? (thumbnailTag.src.startsWith('/') ? 'https://news.google.com' + thumbnailTag.src : thumbnailTag.src) : 'https://via.placeholder.com/300x150?text=No+Image';
+        const dateTag = article.querySelector('time.hvbAAd');
+        const date = dateTag ? dateTag.getAttribute('datetime') : 'No Date';
+
+        const newsHtml = `
+            <div class="card">
+                <img src="${thumbnail}" alt="${title}">
+                <h4><b>${title}</b></h4>
+                <p>출처: ${source}</p>
+                <p>날짜: ${date}</p>
+                <a href="${link}" target="_blank">기사 읽기</a>
+            </div>
+        `;
+        newsContainer.innerHTML += newsHtml;
+    });
+    const moreButton = document.getElementById('moreButton');
+    if (articles.length > end) {
+        moreButton.style.display = 'block';
+    } else {
+        moreButton.style.display = 'none';
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     renderCharts();
-    renderNews();
+    loadNews('해상운임'); // Load initial news category
 });
