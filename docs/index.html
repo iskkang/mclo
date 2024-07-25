@@ -9,27 +9,41 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
         <h1>MTL Dashboard</h1>
-        <h2>Timeline Graphs</h2>
-        <div class="chart-container">
-            <div id="scfiChart"></div>
-        </div>
-        <div class="chart-container">
-            <div id="portComparisonChart"></div>
-        </div>
-        <div class="chart-container">
-            <div id="globalTradeChart"></div>
-        </div>
-        <h2>Latest News and Port Status</h2>
-        <div class="card">
-            <h3>Latest News</h3>
-            <div id="newsContainer"></div>
-        </div>
-        <div class="card">
-            <h3>Port Status</h3>
-            <div id="portStatusChart"></div>
-        </div>
+    <div id="charts">
+        <div id="scfiChart"></div>
+        <div id="portComparisonChart"></div>
+        <div id="globalTradeChart"></div>
     </div>
+    <div id="newsContainer"></div>
+    <h2>Port Data</h2>
+    <table id="portTable" class="display">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Locode</th>
+                <th>Last Import TEU</th>
+                <th>Last Export TEU</th>
+                <th>Last Import TEU MoM</th>
+                <th>Last Export TEU MoM</th>
+                <th>Turnaround</th>
+                <th>Transshipments</th>
+                <th>Vessels Berthed</th>
+                <th>Port Congestion</th>
+                <th>Schedule</th>
+                <th>Delay Percent</th>
+                <th>Import Dwell Time</th>
+                <th>Export Dwell Time</th>
+                <th>TS Dwell Time</th>
+            </tr>
+        </thead>
+        <tbody id="portTableBody">
+        </tbody>
+    </table>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="app.js"></script>
+    
 </body>
 </html>
