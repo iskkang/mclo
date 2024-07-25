@@ -249,6 +249,7 @@ function displayNews(doc, append = false) {
 
         const newsHtml = `
             <div class="card">
+                <img src="${thumbnail}" alt="${title}">
                 <h4><b>${title}</b></h4>
                 <p>출처: ${source}</p>
                 <p>날짜: ${date}</p>
