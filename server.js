@@ -7,5 +7,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app:${PORT}`);
 });
