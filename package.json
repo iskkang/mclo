@@ -1,16 +1,14 @@
 {
   "name": "mclo",
   "version": "1.0.0",
-  "description": "A Node.js project to serve logistics data",
-  "main": "app.js",
+  "description": "A simple Node.js app with Plotly charts",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "axios": "^0.27.2",
-    "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "express": "^4.18.2"
   },
-  "author": "",
+  "author": "Issan Kang",
   "license": "ISC"
 }
