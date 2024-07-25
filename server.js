@@ -81,5 +81,5 @@ app.get('/port-data', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app:${PORT}`);
+    console.log(`Server is running on http://localhost:3000`);
 });
