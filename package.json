@@ -1,7 +1,7 @@
 {
   "name": "mclo",
   "version": "1.0.0",
-  "description": "A simple Node.js app with Plotly charts",
+  "description": "MTL Dashboard",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -12,8 +12,10 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "http-proxy-middleware": "^2.0.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "mapbox-gl": "^2.3.1"
   },
+  "devDependencies": {},
   "author": "Issan Kang",
   "license": "ISC"
 }
