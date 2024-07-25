@@ -15,7 +15,7 @@ function initializeMap() {
     fetchPortMapData().then(portMapData => {
         if (portMapData && portMapData.length > 0) {
             var portIcon = L.icon({
-                iconUrl: 'docs/port-top.png',
+                iconUrl: './port-top.png',
                 iconSize: [30, 30], // size of the icon
                 iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
                 popupAnchor: [0, -15] // point from which the popup should open relative to the iconAnchor
