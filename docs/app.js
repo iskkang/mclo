@@ -15,7 +15,7 @@ function initializeMap() {
     fetchPortMapData().then(portMapData => {
         if (portMapData && portMapData.length > 0) {
             var portIcon = L.icon({
-                iconUrl: './port-top.png',
+                iconUrl: './docs/port-top.png',
                 iconSize: [30, 30], // size of the icon
                 iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
                 popupAnchor: [0, -15] // point from which the popup should open relative to the iconAnchor
@@ -54,7 +54,13 @@ async function renderCharts() {
     const portComparisonData = await fetchData('port-comparison');
     const portDataResponse = await fetchData('port-data');
 
-    // SCFI Chart
+    renderSCFIChart(scfiDataResponse);
+    renderPortComparisonChart(portComparisonData);
+    renderGlobalExportsChart(globalExportsData);
+    renderPortDataTable(portDataResponse);
+}
+
+function renderSCFIChart(scfiDataResponse) {
     if (scfiDataResponse && scfiDataResponse.data && scfiDataResponse.data.length > 0) {
         const scfiData = scfiDataResponse.data;
         const series = scfiDataResponse.series;
@@ -83,8 +89,9 @@ async function renderCharts() {
         footnoteElement.innerText = footnote;
         document.getElementById('scfiChart').appendChild(footnoteElement);
     }
+}
 
-    // Port Comparison Chart
+function renderPortComparisonChart(portComparisonData) {
     if (portComparisonData && portComparisonData.length > 0) {
         const portNames = portComparisonData.map(item => item.name);
         const portValuesJune24 = portComparisonData.map(item => item['June 24']);
@@ -115,8 +122,9 @@ async function renderCharts() {
 
         Plotly.newPlot('portComparisonChart', [portTraceJune24, portTraceJune23], portLayout);
     }
+}
 
-    // Global Exports Chart
+function renderGlobalExportsChart(globalExportsData) {
     if (globalExportsData && globalExportsData.length > 0) {
         const exportDates = globalExportsData.map(item => item.Date);
         const regions = Object.keys(globalExportsData[0]).filter(key => key !== 'Date');
@@ -142,8 +150,9 @@ async function renderCharts() {
     } else {
         console.error('Invalid globalExportsData structure:', globalExportsData);
     }
+}
 
-    // Port Data Table
+function renderPortDataTable(portDataResponse) {
     if (portDataResponse && portDataResponse.length > 0) {
         const portData = portDataResponse;
         const tableBody = document.getElementById('portTableBody');
