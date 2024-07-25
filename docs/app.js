@@ -2,7 +2,6 @@ const BASE_URL = 'https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3RhcmJveCIsImEiOiJjbHoweDNmdzgzMHB4MnFzNjVpbTNlcGsyIn0.4Clk502C_svsGBm6RRVCjg';
 
-
 async function fetchData(endpoint) {
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, {
@@ -34,9 +33,9 @@ async function renderCharts() {
         const scfiData = scfiDataResponse.data;
         const series = scfiDataResponse.series;
         const footnote = scfiDataResponse.footnote;
-        
+
         const scfiDates = scfiData.map(item => item.Date);
-        
+
         const traces = series.map(serie => ({
             x: scfiDates,
             y: scfiData.map(item => item[serie.code]),
@@ -45,7 +44,7 @@ async function renderCharts() {
             name: serie.name,
             marker: { color: serie.color }
         }));
-        
+
         const scfiLayout = {
             title: 'Shanghai Containerized Freight Index (SCFI)',
             xaxis: { title: 'Date' },
@@ -128,6 +127,7 @@ async function renderCharts() {
             row.innerHTML = `
                 <td>${item.rank}</td>
                 <td>${item.name}</td>
+                <td>${item.locode}</td>
                 <td>${item.last_import_teu.toLocaleString()}</td>
                 <td>${item.last_export_teu?.toLocaleString() || 'N/A'}</td>
                 <td>${item.last_import_teu_mom?.toFixed(1) || 'N/A'}%</td>
@@ -143,9 +143,8 @@ async function renderCharts() {
         });
         $('#portTable').DataTable();
     }
-}
 
-  // Initialize Mapbox
+    // Initialize Mapbox
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
@@ -153,7 +152,7 @@ async function renderCharts() {
         zoom: 2
     });
 
-   // Add port icons
+    // Add port icons
     if (portDataResponse && portDataResponse.response && portDataResponse.response.docs) {
         const portData = portDataResponse.response.docs;
         portData.forEach(item => {
@@ -205,7 +204,6 @@ async function fetchPortDetails(locode) {
     }
     return null;
 }
-
 
 let currentKeyword = '';
 let currentPage = 1;
