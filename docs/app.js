@@ -25,6 +25,7 @@ async function renderCharts() {
     const scfiDataResponse = await fetchData('scfi');
     const portComparisonData = await fetchData('port-comparison');
     const portDataResponse = await fetchData('port-data');
+    const portMapData = await fetchData('port-map');
 
     // SCFI Chart
     if (scfiDataResponse && scfiDataResponse.data && scfiDataResponse.data.length > 0) {
@@ -150,8 +151,8 @@ async function renderCharts() {
     }).addTo(map);
 
     // Add port icons
-    if (portDataResponse && portDataResponse.length > 0) {
-        const portData = portDataResponse;
+    if (portMapData && portMapData.length > 0) {
+        const portData = portMapData;
         portData.forEach(item => {
             const marker = L.marker(item.coord.split(',').map(Number), {
                 icon: L.icon({
