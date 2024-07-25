@@ -23,7 +23,7 @@ async function fetchData(endpoint) {
 
 async function renderCharts() {
     const globalExportsData = await fetchData('global-exports');
-    const scfiData = await fetchData('scfi');
+    const scfiDataResponse = await fetchData('scfi');
     const portComparisonData = await fetchData('port-comparison');
     const portData = await fetchData('port-data');
     
