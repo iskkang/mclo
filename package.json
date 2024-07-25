@@ -15,7 +15,9 @@
     "path": "^0.12.7",
     "mapbox-gl": "^2.3.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "leaflet": "1.7.1"
+  },
   "author": "Issan Kang",
   "license": "ISC"
 }
