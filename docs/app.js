@@ -81,26 +81,33 @@ async function renderCharts() {
         Plotly.newPlot('portComparisonChart', [portTraceJune24, portTraceJune23], portLayout);
     }
 
-    // Global Exports Chart
+     // Global Exports Chart
     if (globalExportsData && globalExportsData.length > 0) {
-        const exportDates = globalExportsData.map(item => item.Date);
-        const exportValues = globalExportsData.map(item => item.value);
+        const series = globalExportsData.plots[0].series;
+        const data = globalExportsData.plots[0].data;
+        const exportDates = data.map(item => item.Date);
 
-        const exportsTrace = {
+        const traces = series.map(serie => ({
             x: exportDates,
-            y: exportValues,
+            y: data.map(item => item[serie.code]),
             type: 'bar',
-            marker: { color: 'green' }
-        };
+            name: serie.name,
+            marker: { color: serie.color || 'random' },
+            hoverinfo: 'x+y',
+        }));
 
         const exportsLayout = {
             title: 'Global Exports (TEU by Week)',
             xaxis: { title: 'Date' },
-            yaxis: { title: 'TEU' }
+            yaxis: { title: 'TEU' },
+            barmode: 'stack',
+            hovermode: 'closest',
+            showlegend: true
         };
 
-        Plotly.newPlot('globalTradeChart', [exportsTrace], exportsLayout);
+        Plotly.newPlot('globalTradeChart', traces, exportsLayout);
     }
+
 
     // Port Data Chart
     if (portData && portData.length > 0) {
