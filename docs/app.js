@@ -114,25 +114,32 @@ async function renderCharts() {
         console.error('Invalid globalExportsData structure:', globalExportsData);
     }
 
-    // Port Data Chart
+    // Port Data Table
     if (portData && portData.length > 0) {
-        const portNames = portData.map(item => item.name);
-        const portValues = portData.map(item => item.value);
-
-        const portTrace = {
-            x: portNames,
-            y: portValues,
-            type: 'bar',
-            marker: { color: 'purple' }
-        };
-
-        const portLayout = {
-            title: 'Port Data Overview',
-            xaxis: { title: 'Port' },
-            yaxis: { title: 'Value' }
-        };
-
-        Plotly.newPlot('portStatusChart', [portTrace], portLayout);
+        const tableBody = document.getElementById('portTableBody');
+        portData.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.rank}</td>
+                <td>${item.name}</td>
+                <td>${item.locode}</td>
+                <td>${item.last_import_teu.toLocaleString()}</td>
+                <td>${item.last_export_teu?.toLocaleString() || 'N/A'}</td>
+                <td>${item.last_import_teu_mom?.toFixed(1) || 'N/A'}%</td>
+                <td>${item.last_export_teu_mom?.toFixed(1) || 'N/A'}%</td>
+                <td>${item.turnaround}</td>
+                <td>${item.transshipments.toFixed(1)}</td>
+                <td>${item.vessels_berthed}</td>
+                <td>${item.port_congestion}</td>
+                <td>${item.schedule}</td>
+                <td>${item.delay_percent.toFixed(1)}%</td>
+                <td>${item.import_dwell_time.toFixed(1)}</td>
+                <td>${item.export_dwell_time.toFixed(1)}</td>
+                <td>${item.ts_dwell_time.toFixed(1)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+        $('#portTable').DataTable();
     }
 }
 
