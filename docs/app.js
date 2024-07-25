@@ -81,8 +81,8 @@ async function renderCharts() {
         Plotly.newPlot('portComparisonChart', [portTraceJune24, portTraceJune23], portLayout);
     }
 
-     // Global Exports Chart
-    if (globalExportsData && globalExportsData.length > 0) {
+    // Global Exports Chart
+    if (globalExportsData && globalExportsData.plots && globalExportsData.plots.length > 0) {
         const series = globalExportsData.plots[0].series;
         const data = globalExportsData.plots[0].data;
         const exportDates = data.map(item => item.Date);
@@ -106,6 +106,8 @@ async function renderCharts() {
         };
 
         Plotly.newPlot('globalTradeChart', traces, exportsLayout);
+    } else {
+        console.error('Invalid globalExportsData structure:', globalExportsData);
     }
 
 
