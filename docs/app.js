@@ -175,4 +175,26 @@ async function renderNews() {
                 const title = titleTag?.textContent || 'No Title';
                 const link = titleTag ? 'https://news.google.com' + titleTag.getAttribute('href').substring(1) : 'No Link';
                 const thumbnailTag = article.querySelector('img.Quavad');
-                const thumbnail
+                const thumbnail = thumbnailTag ? (thumbnailTag.src.startsWith('/') ? 'https://news.google.com' + thumbnailTag.src : thumbnailTag.src) : 'https://via.placeholder.com/300x150?text=No+Image';
+                const dateTag = article.querySelector('time.hvbAAd');
+                const date = dateTag ? dateTag.getAttribute('datetime') : 'No Date';
+
+                const newsHtml = `
+                    <div class="card">
+                        <img src="${thumbnail}" alt="${title}">
+                        <h4><b>${title}</b></h4>
+                        <p>출처: ${source}</p>
+                        <p>날짜: ${date}</p>
+                        <a href="${link}" target="_blank">기사 읽기</a>
+                    </div>
+                `;
+                newsContainer.innerHTML += newsHtml;
+            });
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderCharts();
+    renderNews();
+});
