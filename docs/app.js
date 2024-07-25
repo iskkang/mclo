@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeMap() {
-    var map = L.map('map').setView([17.35344883620718, 5.734691], 3);
+    var map = L.map('map').setView([33.7924501,113.7575914], 2);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
         maxZoom: 12,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
