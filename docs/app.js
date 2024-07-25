@@ -26,11 +26,11 @@ async function renderCharts() {
     const portComparisonData = await fetchData('port-comparison');
     const portDataResponse = await fetchData('port-data');
 
-    // SCFI Chart
-    if (scfiDataResponse && scfiDataResponse.plots && scfiDataResponse.plots.length > 0) {
-        const scfiData = scfiDataResponse.plots[0].data;
-        const series = scfiDataResponse.plots[0].series;
-        const footnote = scfiDataResponse.plots[0].footnote;
+      // SCFI Chart
+    if (scfiDataResponse && scfiDataResponse.data && scfiDataResponse.data.length > 0) {
+        const scfiData = scfiDataResponse.data;
+        const series = scfiDataResponse.series;
+        const footnote = scfiDataResponse.footnote;
         
         const scfiDates = scfiData.map(item => item.Date);
         
@@ -56,7 +56,7 @@ async function renderCharts() {
         footnoteElement.innerText = footnote;
         document.getElementById('scfiChart').appendChild(footnoteElement);
     }
-
+    
     // Port Comparison Chart
     if (portComparisonData && portComparisonData.length > 0) {
         const portNames = portComparisonData.map(item => item.name);
