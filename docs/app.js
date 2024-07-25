@@ -151,6 +151,11 @@ async function renderCharts() {
     }).addTo(map);
 
 
+
+        });
+    }
+}
+
 async function fetchPortDetails(locode) {
     try {
         const response = await fetch(`https://www.econdb.com/maritime/ports/async/${encodeURIComponent(locode)}`);
