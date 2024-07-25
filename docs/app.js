@@ -177,7 +177,7 @@ async function loadMoreNews() {
 }
 
 function displayNews(doc, append = false) {
-    const articles = doc.querySelectorAll('article');
+    const articles = Array.from(doc.querySelectorAll('article'));
     const newsContainer = document.getElementById('newsContainer');
     if (!append) {
         newsContainer.innerHTML = '';
