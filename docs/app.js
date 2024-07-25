@@ -1,5 +1,4 @@
 const BASE_URL = 'https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/';
-const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
 async function fetchData(endpoint) {
     try {
@@ -25,8 +24,8 @@ async function renderCharts() {
     const globalExportsData = await fetchData('global-exports');
     const scfiDataResponse = await fetchData('scfi');
     const portComparisonData = await fetchData('port-comparison');
-    const portData = await fetchData('port-data');
-    
+    const portDataResponse = await fetchData('port-data');
+
     // SCFI Chart
     if (scfiDataResponse && scfiDataResponse.plots && scfiDataResponse.plots.length > 0) {
         const scfiData = scfiDataResponse.plots[0].data;
@@ -57,7 +56,7 @@ async function renderCharts() {
         footnoteElement.innerText = footnote;
         document.getElementById('scfiChart').appendChild(footnoteElement);
     }
-    
+
     // Port Comparison Chart
     if (portComparisonData && portComparisonData.length > 0) {
         const portNames = portComparisonData.map(item => item.name);
@@ -118,19 +117,24 @@ async function renderCharts() {
     }
 
     // Port Data Table
-    if (portData && portData.length > 0) {
+    if (portDataResponse && portDataResponse.response && portDataResponse.response.docs) {
+        const portData = portDataResponse.response.docs;
         const tableBody = document.getElementById('portTableBody');
         portData.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.rank}</td>
                 <td>${item.name}</td>
+                <td>${item.locode}</td>
                 <td>${item.last_import_teu.toLocaleString()}</td>
                 <td>${item.last_export_teu?.toLocaleString() || 'N/A'}</td>
                 <td>${item.last_import_teu_mom?.toFixed(1) || 'N/A'}%</td>
                 <td>${item.last_export_teu_mom?.toFixed(1) || 'N/A'}%</td>
+                <td>${item.turnaround}</td>
                 <td>${item.transshipments.toFixed(1)}</td>
                 <td>${item.vessels_berthed}</td>
+                <td>${item.port_congestion}</td>
+                <td>${item.schedule}</td>
                 <td>${item.delay_percent.toFixed(1)}%</td>
                 <td>${item.import_dwell_time.toFixed(1)}</td>
                 <td>${item.export_dwell_time.toFixed(1)}</td>
@@ -143,7 +147,7 @@ async function renderCharts() {
 }
 
 async function fetchNews(keyword) {
-    const url = `${CORS_PROXY}https://news.google.com/search?q=${keyword}&hl=ko&gl=KR&ceid=KR:ko`;
+    const url = `/api/news?q=${keyword}&hl=ko&gl=KR&ceid=KR:ko`;
     try {
         const response = await fetch(url);
         if (response.ok) {
@@ -171,26 +175,4 @@ async function renderNews() {
                 const title = titleTag?.textContent || 'No Title';
                 const link = titleTag ? 'https://news.google.com' + titleTag.getAttribute('href').substring(1) : 'No Link';
                 const thumbnailTag = article.querySelector('img.Quavad');
-                const thumbnail = thumbnailTag ? (thumbnailTag.src.startsWith('/') ? 'https://news.google.com' + thumbnailTag.src : thumbnailTag.src) : 'https://via.placeholder.com/300x150?text=No+Image';
-                const dateTag = article.querySelector('time.hvbAAd');
-                const date = dateTag ? dateTag.getAttribute('datetime') : 'No Date';
-
-                const newsHtml = `
-                    <div class="card">
-                        <img src="${thumbnail}" alt="${title}">
-                        <h4><b>${title}</b></h4>
-                        <p>출처: ${source}</p>
-                        <p>날짜: ${date}</p>
-                        <a href="${link}" target="_blank">기사 읽기</a>
-                    </div>
-                `;
-                newsContainer.innerHTML += newsHtml;
-            });
-        }
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    renderCharts();
-    renderNews();
-});
+                const thumbnail
