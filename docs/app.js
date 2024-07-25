@@ -149,36 +149,6 @@ async function renderCharts() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-
-    // Add port icons
-    if (portMapData && portMapData.length > 0) {
-        portMapData.forEach(item => {
-            const marker = L.marker(item.coord.split(',').map(Number), {
-                icon: L.icon({
-                    iconUrl: 'https://www.econdb.com/static/assets/pics/mapbox/port-top.png',
-                    iconSize: [30, 30]
-                })
-            }).addTo(map);
-
-            marker.bindPopup(`
-                <h4>${item.name}</h4>
-                <p>Country: ${item.country}</p>
-                <p>Rank: ${item.rank}</p>
-            `);
-
-            marker.on('click', async () => {
-                const portDetails = await fetchPortDetails(item.locode);
-                if (portDetails) {
-                    const { name, country, rank } = portDetails.meta;
-                    marker.bindPopup(`
-                        <h4>${name}</h4>
-                        <p>Country: ${country}</p>
-                        <p>Rank: ${rank}</p>
-                    `).openPopup();
-                }
-            });
-        });
-    }
 }
 
 async function fetchPortDetails(locode) {
