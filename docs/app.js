@@ -124,6 +124,7 @@ async function renderCharts() {
             row.innerHTML = `
                 <td>${item.rank}</td>
                 <td>${item.name}</td>
+                <td>${item.locode}</td>
                 <td>${item.last_import_teu.toLocaleString()}</td>
                 <td>${item.last_export_teu?.toLocaleString() || 'N/A'}</td>
                 <td>${item.last_import_teu_mom?.toFixed(1) || 'N/A'}%</td>
@@ -248,7 +249,6 @@ function displayNews(doc, append = false) {
 
         const newsHtml = `
             <div class="card">
-                <img src="${thumbnail}" alt="${title}">
                 <h4><b>${title}</b></h4>
                 <p>출처: ${source}</p>
                 <p>날짜: ${date}</p>
