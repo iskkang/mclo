@@ -143,15 +143,21 @@ async function renderCharts() {
     }
 
     // Initialize Leaflet
-    var mymap = L.map('mapid').setView([17.35344883620718, 5.734691754366622], 2);
+    initializeMap();
+}
+
+function initializeMap() {
+    var mymap = L.map('map').setView([17.35344883620718, 5.734691754366622], 2);
+
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 2,
-    id: 'mapbox/streets-v11',
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: 'pk.eyJ1IjoiZm9ycm9oIiwiYSI6ImNrZG1vemxidTBldjMzM3Fucmpjbm5pemwifQ.KYk_qkWYkDNX0jYFzUzcIQ'
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 2,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoiZm9ycm9oIiwiYSI6ImNrZG1vemxidTBldjMzM3Fucmpjbm5pemwifQ.KYk_qkWYkDNX0jYFzUzcIQ'
     }).addTo(mymap);
+
     var marker = L.marker([37.00, 127.00]).addTo(mymap);
 }
 
