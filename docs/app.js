@@ -41,7 +41,7 @@ async function renderCharts() {
             type: 'scatter',
             mode: 'lines+markers',
             name: serie.name,
-            marker: { color: 'random' }
+            marker: { color: serie.color }
         }));
         
         const scfiLayout = {
