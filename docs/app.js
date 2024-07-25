@@ -144,7 +144,7 @@ async function renderCharts() {
 
 let currentKeyword = '';
 let currentPage = 1;
-const articlesPerPage = 10;
+const articlesPerPage = 5;
 
 async function fetchNews(keyword) {
     const url = `/api/news?q=${keyword}&hl=ko&gl=KR&ceid=KR:ko`;
