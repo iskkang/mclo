@@ -26,15 +26,14 @@ async function renderCharts() {
     const scfiData = await fetchData('scfi');
     const portComparisonData = await fetchData('port-comparison');
     const portData = await fetchData('port-data');
+
+    const portData = portDataResponse?.response?.docs || [];
     
     // SCFI Chart
-    if (scfiData && scfiData.length > 0) {
-        const series = [
-            {code: "price", name: "Future (prompt month)", color: "red"},
-            {code: "SCSFI_EU", name: "Observed", color: "green"},
-            {code: "Forward curve", name: "Forward curve (Jul-24)", color: "blue"},
-            {code: "wkago", name: "Forward curve (Jul-17)", color: "orange"}
-        ];
+    if (scfiDataResponse && scfiDataResponse.plots && scfiDataResponse.plots.length > 0) {
+        const scfiData = scfiDataResponse.plots[0].data;
+        const series = scfiDataResponse.plots[0].series;
+        const footnote = scfiDataResponse.plots[0].footnote;
         
         const scfiDates = scfiData.map(item => item.Date);
         
@@ -44,7 +43,7 @@ async function renderCharts() {
             type: 'scatter',
             mode: 'lines+markers',
             name: serie.name,
-            marker: { color: serie.color }
+            marker: { color: 'random' }
         }));
         
         const scfiLayout = {
@@ -54,7 +53,13 @@ async function renderCharts() {
         };
 
         Plotly.newPlot('scfiChart', traces, scfiLayout);
+
+        // Display footnote
+        const footnoteElement = document.createElement('div');
+        footnoteElement.innerText = footnote;
+        document.getElementById('scfiChart').appendChild(footnoteElement);
     }
+    
     // Port Comparison Chart
     if (portComparisonData && portComparisonData.length > 0) {
         const portNames = portComparisonData.map(item => item.name);
