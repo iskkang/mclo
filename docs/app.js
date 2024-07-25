@@ -147,7 +147,7 @@ async function renderCharts() {
 }
 
 function initializeMap(portMapData) {
-    var map = L.map('map').setView([51.505, -0.09], 3);
+    var map = L.map('map').setView([17.35344, 5.734691], 3);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
         maxZoom: 12,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -155,7 +155,7 @@ function initializeMap(portMapData) {
 
     // Define custom icon
     var portIcon = L.icon({
-        iconUrl: 'docs/port-top.png',
+        iconUrl: '/docs/port-top.png',
         iconSize: [30, 30], // size of the icon
         iconAnchor: [15, 15], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -15] // point from which the popup should open relative to the iconAnchor
