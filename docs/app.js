@@ -142,36 +142,28 @@ async function renderCharts() {
         $('#portTable').DataTable();
     }
 
-    // Initialize OpenLayers map
-    initializeMap();
+    // Initialize Leaflet map and add markers
+    initializeMap(portMapData);
 }
 
-function initializeMap() {
-    var map = new ol.Map({
-        target: 'map',
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM()
-            })
-        ],
-        view: new ol.View({
-            center: ol.proj.fromLonLat([5.734691754366622, 17.35344883620718]),
-            zoom: 2
-        })
-    });
+function initializeMap(portMapData) {
+    var map = L.map('map').setView([51.505, -0.09], 3);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+        maxZoom: 12,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
 
-    var marker = new ol.Overlay({
-        position: ol.proj.fromLonLat([127.00, 37.00]),
-        positioning: 'center-center',
-        element: document.createElement('div'),
-        stopEvent: false
-    });
-
-    marker.getElement().style.backgroundImage = 'url(https://openlayers.org/en/v6.6.1/examples/data/icon.png)';
-    marker.getElement().style.width = '32px';
-    marker.getElement().style.height = '32px';
-
-    map.addOverlay(marker);
+    // Add port icons
+    if (portMapData && portMapData.length > 0) {
+        portMapData.forEach(item => {
+            const marker = L.marker(item.coord.split(',').map(Number)).addTo(map);
+            marker.bindPopup(`
+                <h4>${item.name}</h4>
+                <p>Country: ${item.country}</p>
+                <p>Rank: ${item.rank}</p>
+            `);
+        });
+    }
 }
 
 async function fetchPortDetails(locode) {
