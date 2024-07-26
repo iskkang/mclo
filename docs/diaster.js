@@ -1,61 +1,29 @@
-const axios = require('axios');
+document.addEventListener('DOMContentLoaded', () => {
+    loadDisasterData();
+});
 
-async function fetchAndExtractData(url) {
-    try {
-        const response = await axios.get(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-            }
-        });
-
-        if (response.status === 200) {
-            const data = response.data;
-
-            if ('features' in data) {
-                const extractedData = [];
-                for (const feature of data.features) {
-                    if (typeof feature === 'object') {
-                        const geometry = feature.geometry?.coordinates || null;
-                        const properties = feature.properties || {};
-                        const alertlevel = properties.alertlevel || null;
-                        const country = properties.country || null;
-                        const datemodified = properties.datemodified || null;
-                        const description = properties.description || null;
-                        const htmldescription = properties.htmldescription || null;
-                        const iconoverall = properties.iconoverall || null;
-                        const url_report = properties.url?.report || null;
-
-                        extractedData.push({
-                            coord: geometry,
-                            level: alertlevel,
-                            country: country,
-                            Date: datemodified,
-                            name: description,
-                            title: htmldescription,
-                            icon: iconoverall,
-                            report: url_report,
-                        });
-                    }
-                }
-                return extractedData;
-            } else {
-                console.log("No 'features' key found in the response data.");
-                return [];
-            }
-        } else {
-            console.log(`Failed to retrieve data: ${response.status}`);
-            return [];
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        return [];
+async function loadDisasterData() {
+    const response = await fetch('/disaster-data');
+    if (response.ok) {
+        const data = await response.json();
+        displayDisasterData(data);
+    } else {
+        console.error('Failed to load disaster data');
     }
 }
 
-// Define the URL
-const url = 'https://www.gdacs.org/gdacsapi/api/events/geteventlist/ARCHIVE?eventlist=EQ;TC;FL;VO;WF';
-
-// Fetch and extract data
-fetchAndExtractData(url).then(extractedData => {
-    console.log(JSON.stringify(extractedData, null, 2));
-});
+function displayDisasterData(data) {
+    const tableBody = document.getElementById('disasterTableBody');
+    data.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><img src="${item.icon}" alt="icon" width="30" height="30"></td>
+            <td>${item.level}</td>
+            <td>${item.title}</td>
+            <td>${item.Date}</td>
+            <td><a href="${item.report}" target="_blank">Report</a></td>
+        `;
+        tableBody.appendChild(row);
+    });
+    $('#disasterTable').DataTable();
+}
