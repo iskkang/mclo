@@ -26,7 +26,6 @@ function displayDisasterData(data) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td><img src="${item.icon}" alt="icon" width="30" height="30"></td>
-            <td>${item.level}</td>
             <td>${item.title}</td>
             <td>${item.Date}</td>
             <td><a href="${item.report}" target="_blank">Report</a></td>
