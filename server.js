@@ -101,12 +101,6 @@ const fetchPortmap = async () => {
     return null;
 };
 
-// Fetch and extract disaster data
-const fetchDisasterData = async () => {
-    const url = 'https://www.gdacs.org/gdacsapi/api/events/geteventlist/ARCHIVE?eventlist=EQ;TC;FL;VO;WF';
-    return await fetchAndExtractData(url);
-};
-
 
 // Endpoints for data fetching
 app.get('/global-exports', async (req, res) => {
@@ -134,8 +128,10 @@ app.get('/port-map', async (req, res) => {
     res.json(data);
 });
 
+// Fetch disaster data
 app.get('/disaster-data', async (req, res) => {
-    const data = await fetchDisasterData();
+    const url = 'https://www.gdacs.org/gdacsapi/api/events/geteventlist/ARCHIVE?eventlist=EQ;TC;FL;VO;WF';
+    const data = await fetchAndExtractData(url);
     res.json(data);
 });
 
