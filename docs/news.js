@@ -50,11 +50,13 @@ function displayNews(doc, append = false) {
         const date = dateTag ? dateTag.getAttribute('datetime') : 'No Date';
 
         const newsHtml = `
-            <div class="card">
-                <h4><b>${title}</b></h4>
-                <p>출처: ${source}</p>
-                <p>날짜: ${date}</p>
-                <a href="${link}" target="_blank">기사 읽기</a>
+            <div class="table">
+            <tr>
+                <th><b>${title}</b></th>
+                <th>출처: ${source}</th>
+                <th>날짜: ${date}</th>
+                <th><a href="${link}" target="_blank">기사 읽기</a></th>
+             </tr>
             </div>
         `;
         newsContainer.innerHTML += newsHtml;
