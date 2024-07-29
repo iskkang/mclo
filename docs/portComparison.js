@@ -6,16 +6,16 @@ async function renderPortComparisonChart() {
         const portValuesJune23 = portComparisonData.map(item => item['June 23']);
 
         const portTraceJune24 = {
-            x: portNames,
-            y: portValuesJune24,
+            x: portValuesJune24,
+            y: portNames,
             type: 'bar',
             name: 'June 24',
             marker: { color: 'orange' }
         };
 
         const portTraceJune23 = {
-            x: portNames,
-            y: portValuesJune23,
+            x: portValuesJune23,
+            y: portNames,
             type: 'bar',
             name: 'June 23',
             marker: { color: 'blue' }
@@ -23,8 +23,8 @@ async function renderPortComparisonChart() {
 
         const portLayout = {
             title: 'Top Port Comparison (June 24 vs June 23)',
-            xaxis: { title: 'Port' },
-            yaxis: { title: 'Thousand TEU' },
+            xaxis: { title: '' },
+            yaxis: { title: '' },
             barmode: 'group'
         };
 
