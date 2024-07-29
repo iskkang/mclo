@@ -110,7 +110,18 @@
         <button onclick="loadNews('물류')">물류</button>
         <button onclick="loadNews('Shipping')">Shipping</button>
     </div>
-    <div id="newsContainer"></div>
+    <table id="newsContainer">
+    <thead>
+            <tr>
+                <th>title</th>
+                <th>source</th>
+                <th>Date</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+         <tbody id="newsContainer"></tbody>
+    </table>
+    
     <button id="moreButton" onclick="loadMoreNews()" style="display: none;">More</button>
 
     <script src="app.js"></script>
