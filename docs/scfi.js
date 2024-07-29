@@ -16,9 +16,8 @@ async function renderSCFIChart() {
         }));
 
         const scfiLayout = {
-            title: 'Shanghai Containerized Freight Index (SCFI)',
-            xaxis: { title: 'Date' },
-            yaxis: { title: 'SCFI Value' }
+            xaxis: { title: '' },
+            yaxis: { title: '' }
         };
 
         Plotly.newPlot('scfiChart', traces, scfiLayout);
