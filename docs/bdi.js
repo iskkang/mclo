@@ -1,33 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
-    loadBDIData();
+    loadChartData('BDI'); // 초기 로드 시 BDI 데이터 표시
 });
 
-async function loadBDIData() {
+async function loadChartData(type) {
     const response = await fetch('/data');
     if (response.ok) {
-        const data = await response.json();
-        displayBDIChart(data);
+        const allData = await response.json();
+        const dataset = allData.find(data => data.title === type);
+        if (dataset) {
+            displayChart(dataset);
+        } else {
+            console.error(`No data found for ${type}`);
+        }
     } else {
-        console.error('Failed to load BDI data');
+        console.error('Failed to load data');
     }
 }
 
-function displayBDIChart(data) {
+function displayChart(dataset) {
     const ctx = document.getElementById('bdiChart').getContext('2d');
-    const datasets = data.map(dataset => {
-        return {
-            label: dataset.title,
-            data: dataset.data.map(item => ({ x: item[0], y: item[1] })),
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            fill: false
-        };
-    });
-
-    new Chart(ctx, {
+    if (window.myChart) {
+        window.myChart.destroy();
+    }
+    window.myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            datasets: datasets
+            labels: dataset.data.map(item => item[0]),
+            datasets: [{
+                label: dataset.title,
+                data: dataset.data.map(item => item[1]),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: false
+            }]
         },
         options: {
             responsive: true,
