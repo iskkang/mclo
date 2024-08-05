@@ -1,3 +1,6 @@
+const fetch = require('node-fetch');
+const Plotly = require('plotly.js-dist');
+
 async function fetchData(url) {
     try {
         const response = await fetch(url);
@@ -22,8 +25,8 @@ async function renderPortComparisonChart() {
         const portValuesJune23 = portComparisonData.map(item => parseFloat(item['June 23']));
 
         const portTraceJune24 = {
-            x: portValuesJune24,
             y: portNames,
+            x: portValuesJune24,
             type: 'bar',
             orientation: 'h',
             name: 'June 24',
@@ -31,8 +34,8 @@ async function renderPortComparisonChart() {
         };
 
         const portTraceJune23 = {
-            x: portValuesJune23,
             y: portNames,
+            x: portValuesJune23,
             type: 'bar',
             orientation: 'h',
             name: 'June 23',
