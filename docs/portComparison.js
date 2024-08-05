@@ -1,6 +1,3 @@
-const fetch = require('node-fetch');
-const Plotly = require('plotly.js-dist');
-
 async function fetchData(url) {
     try {
         const response = await fetch(url);
