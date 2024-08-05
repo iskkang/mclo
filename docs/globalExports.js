@@ -13,7 +13,7 @@ async function renderGlobalExportsChart() {
         }));
 
         const exportsLayout = {
-            title: 'Global Exports (TEU by Week)',
+            title: '',
             xaxis: { title: 'Date' },
             yaxis: { title: 'TEU' },
             barmode: 'stack',
