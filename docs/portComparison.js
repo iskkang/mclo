@@ -1,17 +1,3 @@
-async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return data.plots[0].data;
-    } catch (error) {
-        console.error('Failed to fetch data:', error);
-        return null;
-    }
-}
-
 async function renderPortComparisonChart() {
     const url = "https://www.econdb.com/widgets/top-port-comparison/data/";
     const portComparisonData = await fetchData(url);
@@ -43,7 +29,7 @@ async function renderPortComparisonChart() {
             title: '',
             xaxis: { title: 'Thousand TEU' },
             yaxis: { title: 'Port' },
-            barmode: 'group'
+            barmode: ''
         };
 
         Plotly.newPlot('portComparisonChart', [portTraceJune24, portTraceJune23], portLayout);
