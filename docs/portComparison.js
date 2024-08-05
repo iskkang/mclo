@@ -43,7 +43,7 @@ async function renderPortComparisonChart() {
         };
 
         const portLayout = {
-            title: 'Top Port Comparison (June 24 vs June 23)',
+            title: '',
             xaxis: { title: 'Thousand TEU' },
             yaxis: { title: 'Port' },
             barmode: 'group'
