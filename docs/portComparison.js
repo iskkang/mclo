@@ -7,7 +7,7 @@ async function renderPortComparisonChart() {
 
         const portTrace24 = {
             y: portNames,  // x축을 y축으로 변경
-            x: portValuesJune24,  // y축을 x축으로 변경
+            x: portValues24,  // y축을 x축으로 변경
             type: 'bar',
             name: '24',
             marker: { color: 'orange' },
@@ -16,7 +16,7 @@ async function renderPortComparisonChart() {
 
         const portTrace23 = {
             y: portNames,  // x축을 y축으로 변경
-            x: portValuesJune23,  // y축을 x축으로 변경
+            x: portValues23,  // y축을 x축으로 변경
             type: 'bar',
             name: '23',
             marker: { color: 'blue' },
