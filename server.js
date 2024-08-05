@@ -107,6 +107,106 @@ const fetchDisasterData = async () => {
     return await fetchAndExtractData(url);
 };
 
+// Function to process data
+function processData(title, data) {
+    let previous_value = null;
+    const differences = [];
+
+    data.forEach(item => {
+        const timestamp = item[0];
+        const date = new Date(timestamp).toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
+        item[0] = date;
+
+        const current_value = item[1];
+        if (previous_value !== null) {
+            const difference = current_value - previous_value;
+            differences.push(difference);
+        }
+        previous_value = current_value;
+    });
+
+    return {
+        title: title,
+        data: data,
+        finalDifference: differences.length > 0 ? differences[differences.length - 1] : null
+    };
+}
+
+// Fetch BDI Data
+const fetchBdiData = async () => {
+    try {
+        const url = 'https://www.ksg.co.kr/upload/shipschedule_jsons/bdi_free.json';
+        const response = await axios.get(url);
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return processData('BDI', response.data);
+    } catch (error) {
+        console.error('Failed to fetch BDI data:', error);
+        return null;
+    }
+};
+
+// Fetch HRCI Data
+const fetchHrciData = async () => {
+    try {
+        const url = 'https://www.ksg.co.kr/upload/shipschedule_jsons/main_hrci.json';
+        const response = await axios.get(url);
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return processData('HRCI', response.data);
+    } catch (error) {
+        console.error('Failed to fetch HRCI data:', error);
+        return null;
+    }
+};
+
+// Fetch SCFI Data
+const fetchScfiData = async () => {
+    try {
+        const url = 'https://www.ksg.co.kr/upload/shipschedule_jsons/main_scfi_total_free.json';
+        const response = await axios.get(url);
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return processData('SCFI', response.data);
+    } catch (error) {
+        console.error('Failed to fetch SCFI data:', error);
+        return null;
+    }
+};
+
+// Fetch KCCI Data
+const fetchKcciData = async () => {
+    try {
+        const url = 'https://www.ksg.co.kr/upload/shipschedule_jsons/kcci_main_free.json';
+        const response = await axios.get(url);
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return processData('KCCI', response.data);
+    } catch (error) {
+        console.error('Failed to fetch KCCI data:', error);
+        return null;
+    }
+};
+
+// Fetch KDCI Data
+const fetchKdciData = async () => {
+    try {
+        const url = 'https://www.ksg.co.kr/upload/shipschedule_jsons/kdci_main_free.json';
+        const response = await axios.get(url);
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return processData('KDCI', response.data);
+    } catch (error) {
+        console.error('Failed to fetch KDCI data:', error);
+        return null;
+    }
+};
+
 
 // Endpoints for data fetching
 app.get('/global-exports', async (req, res) => {
@@ -137,6 +237,16 @@ app.get('/port-map', async (req, res) => {
 app.get('/disaster-data', async (req, res) => {
     const data = await fetchDisasterData();
     res.json(data);
+});
+
+app.get('/data', async (req, res) => {
+    const bdiData = await fetchBdiData();
+    const hrciData = await fetchHrciData();
+    const scfiData = await fetchScfiData();
+    const kcciData = await fetchKcciData();
+    const kdciData = await fetchKdciData();
+
+    res.json([bdiData, hrciData, scfiData, kcciData, kdciData]);
 });
 
 
