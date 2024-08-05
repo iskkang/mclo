@@ -88,8 +88,15 @@
         <tbody id="portTableBody"></tbody>
     </table>
 
-          <h2 class="mt-4">BDI Data</h2>
-        <canvas id="bdiChart"></canvas> <!-- Add this line for the BDI chart -->
+ <h2 class="mt-4">BDI Data</h2>
+        <div class="btn-group mb-3" role="group" aria-label="Data Buttons">
+            <button type="button" class="btn btn-primary" onclick="loadChartData('BDI')">BDI</button>
+            <button type="button" class="btn btn-primary" onclick="loadChartData('HRCI')">HRCI</button>
+            <button type="button" class="btn btn-primary" onclick="loadChartData('SCFI')">SCFI</button>
+            <button type="button" class="btn btn-primary" onclick="loadChartData('KCCI')">KCCI</button>
+            <button type="button" class="btn btn-primary" onclick="loadChartData('KDCI')">KDCI</button>
+        </div>
+        <canvas id="bdiChart"></canvas>
 
     
     <h2>World Map</h2>
