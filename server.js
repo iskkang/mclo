@@ -10,7 +10,7 @@ const fetchAndExtractData = require('./fetchDisaster');
 
 // Initialize the app
 const app = express();
-const port = process.env.PORT || 4000; // Changed port to 4000
+const port = process.env.PORT || 3000; // Changed port to 4000
 
 // CORS configuration
 let corsOptions = {
