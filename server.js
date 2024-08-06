@@ -6,7 +6,7 @@ const dotenv = require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const fetchAndExtractData = require('./fetchDisaster');
+const fetchAndExtractData = require('/fetchDisaster');
 
 // Initialize the app
 const app = express();
@@ -246,11 +246,11 @@ app.get('/port-map', async (req, res) => {
 });
 
 // Fetch disaster data
-//app.get('/disaster-data', async (req, res) => {
-//    const url = 'https://www.gdacs.org/gdacsapi/api/events/geteventlist/ARCHIVE?eventlist=EQ;TC;FL;VO;WF';
-//    const data = await fetchAndExtractData(url);
-//    res.json(data);
-//});
+app.get('/disaster-data', async (req, res) => {
+    const url = 'https://www.gdacs.org/gdacsapi/api/events/geteventlist/ARCHIVE?eventlist=EQ;TC;FL;VO;WF';
+    const data = await fetchAndExtractData(url);
+    res.json(data);
+});
 
 
 app.get('/data', async (req, res) => {
