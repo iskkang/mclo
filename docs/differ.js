@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadDifferData(type) {
     try {
-        const response = await fetch(`https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/data/${type}`);
+        const response = await fetch(`/data/${type}`);
         if (response.ok) {
             const dataset = await response.json();
             displayDifference(type, dataset);
