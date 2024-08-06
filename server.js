@@ -245,10 +245,7 @@ app.get('/port-map', async (req, res) => {
     res.json(data);
 });
 
-app.get('/disaster-data', async (req, res) => {
-    const data = await fetchDisasterData();
-    res.json(data);
-});
+
 
 app.get('/data', async (req, res) => {
     const bdiData = await fetchBdiData();
