@@ -1,27 +1,27 @@
 {
-  "name": "mclo",
-  "version": "1.0.0",
-  "description": "MTL Dashboard",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-    "dependencies": {
-    "axios": "^0.21.1",
-    "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "http-proxy-middleware": "^2.0.1",
-    "path": "^0.12.7",
-    "jquery": "^3.5.1",
-    "openlayers": "^4.6.5",
-    "node-fetch": "^2.6.1",
-    "plotly.js": "^1.58.4",
-    "datatables.net": "^1.10.21",
-    "datatables.net-dt": "^1.10.21"
-  },
-  "devDependencies": {
-  },
-  "author": "Issan Kang",
-  "license": "ISC"
-}
+    "name": "mclo",
+    "version": "1.0.0",
+    "description": "MTL Dashboard",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+      "dependencies": {
+      "axios": "^0.21.1",
+      "cors": "^2.8.5",
+      "dotenv": "^10.0.0",
+      "express": "^4.17.1",
+      "http-proxy-middleware": "^2.0.1",
+      "path": "^0.12.7",
+      "jquery": "^3.5.1",
+      "openlayers": "^4.6.5",
+      "node-fetch": "^2.6.1",
+      "plotly.js": "^1.58.4",
+      "datatables.net": "^1.10.21",
+      "datatables.net-dt": "^1.10.21"
+    },
+    "devDependencies": {
+    },
+    "author": "Issan Kang",
+    "license": "ISC"
+  }
