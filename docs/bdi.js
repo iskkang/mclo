@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadChartData(type) {
-    const response = await fetch('https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/data');
+    const response = await fetch('/data');
     if (response.ok) {
         const allData = await response.json();
         const dataset = allData.find(data => data.title === type);
