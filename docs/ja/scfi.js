@@ -22,9 +22,6 @@ async function renderSCFIChart() {
 
         Plotly.newPlot('scfiChart', traces, scfiLayout);
 
-        // Display footnote
-        const footnoteElement = document.createElement('div');
-        footnoteElement.innerText = footnote;
-        document.getElementById('scfiChart').appendChild(footnoteElement);
+
     }
 }
