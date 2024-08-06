@@ -19,12 +19,15 @@ async function loadDifferData(type) {
 
 function displayDifference(type, data) {
     const difference = data.finalDifference !== null ? data.finalDifference.toFixed(2) : 'N/A';
+    const percentage = data.percentage !== null ? `${data.percentage}%` : 'N/A';
 
     const latestValueElem = document.querySelector(`#${type}Difference .latest-value`);
+    const percentageElem = document.querySelector(`#${type}Difference .percentage`);
     const trendIcon = document.querySelector(`#${type}Difference .icon`);
 
-    if (latestValueElem && trendIcon) {
+    if (latestValueElem && percentageElem && trendIcon) {
         latestValueElem.textContent = difference;
+        percentageElem.textContent = percentage;
 
         if (data.finalDifference > 0) {
             trendIcon.classList.add('tx-success', 'ion-md-trending-up');
