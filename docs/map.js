@@ -1,5 +1,5 @@
-function initializeMap() {
-    var map = L.map('map').setView([17.35344883620718, 5.734691], 2);
+async function initializeMap() {
+    const map = L.map('map').setView([17.35344883620718, 5.734691], 2);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
         maxZoom: 12,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
