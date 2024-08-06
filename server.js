@@ -108,15 +108,31 @@ const processData = (title, data) => {
         return null;
     }
 
-    let previous_value = data[data.length - 2][1];
+    let previous_value = null;
+    const differences = [];
+
+    data.forEach(item => {
+        const timestamp = item[0];
+        const date = new Date(timestamp).toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
+        item[0] = date;
+
+        const current_value = item[1];
+        if (previous_value !== null) {
+            const difference = current_value - previous_value;
+            differences.push(difference);
+        }
+        previous_value = current_value;
+    });
+
     let latest_value = data[data.length - 1][1];
-    let difference = latest_value - previous_value;
-    let percentage = ((difference / previous_value) * 100).toFixed(2);
+    let second_last_value = data[data.length - 2][1];
+    let final_difference = latest_value - second_last_value;
+    let percentage = ((final_difference / second_last_value) * 100).toFixed(2);
 
     return {
-        title,
-        data,
-        finalDifference: difference,
+        title: title,
+        data: data,
+        finalDifference: final_difference,
         percentage: percentage
     };
 };
