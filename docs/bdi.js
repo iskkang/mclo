@@ -36,6 +36,7 @@ function displayChart(dataset) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false, // 비율 유지를 하지 않도록 설정
             scales: {
                 xAxes: [{
                     type: 'time',
