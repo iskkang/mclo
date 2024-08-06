@@ -29,7 +29,7 @@ async function initializeMap() {
 
 async function fetchPortMapData() {
     try {
-        const response = await fetch('/port-map');
+        const response = await fetch('https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/port-map');
         if (response.ok) {
             const data = await response.json();
             return data;
