@@ -6,7 +6,7 @@ const dotenv = require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const fetchAndExtractData = require('fetchDisaster');
+const fetchAndExtractData = require('./docs/fetchDisaster');
 
 // Initialize the app
 const app = express();
