@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadDisasterData() {
-    const response = await fetch('/disaster-data');
+    const response = await fetch('https://port-0-mclo-lysc4ja0acad2542.sel4.cloudtype.app/disaster-data');
     if (response.ok) {
         const data = await response.json();
         displayDisasterData(data);
