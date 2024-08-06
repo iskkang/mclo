@@ -101,36 +101,47 @@ const fetchPortmap = async () => {
     return null;
 };
 
-// Fetch and extract disaster data
-const fetchDisasterData = async () => {
-    const url = 'https://www.gdacs.org/gdacsapi/api/events/geteventlist/ARCHIVE?eventlist=EQ;TC;FL;VO;WF';
-    return await fetchAndExtractData(url);
-};
+// Fetch and process data functions
+const processData = (title, data) => {
+    if (!data || !Array.isArray(data) || data.length < 2) {
+        console.error(`Invalid data for ${title}`);
+        return null;
+    }
 
-// Function to process data
-function processData(title, data) {
-    let previous_value = null;
-    const differences = [];
-
-    data.forEach(item => {
-        const timestamp = item[0];
-        const date = new Date(timestamp).toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
-        item[0] = date;
-
-        const current_value = item[1];
-        if (previous_value !== null) {
-            const difference = current_value - previous_value;
-            differences.push(difference);
-        }
-        previous_value = current_value;
-    });
+    let previous_value = data[data.length - 2][1];
+    let latest_value = data[data.length - 1][1];
+    let difference = latest_value - previous_value;
+    let percentage = ((difference / previous_value) * 100).toFixed(2);
 
     return {
-        title: title,
-        data: data,
-        finalDifference: differences.length > 0 ? differences[differences.length - 1] : null
+        title,
+        data,
+        finalDifference: difference,
+        percentage: percentage
     };
-}
+};
+
+const fetchData = async (title, url) => {
+    try {
+        const response = await axios.get(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return processData(title, response.data);
+    } catch (error) {
+        console.error(`Failed to fetch data for ${title}:`, error);
+        return null;
+    }
+};
+
+const urls = {
+    "BDI": "https://www.ksg.co.kr/upload/shipschedule_jsons/bdi_free.json",
+    "SCFI": "https://www.ksg.co.kr/upload/shipschedule_jsons/main_scfi_total_free.json"
+};
 
 // Fetch BDI Data
 const fetchBdiData = async () => {
@@ -248,6 +259,42 @@ app.get('/data', async (req, res) => {
 
     res.json([bdiData, hrciData, scfiData, kcciData, kdciData]);
 });
+
+app.get('/data/bdi', async (req, res) => {
+    const data = await fetchBdiData();
+    res.json(data);
+});
+
+app.get('/data/scfi', async (req, res) => {
+    const data = await fetchScfiData();
+    res.json(data);
+});
+
+app.get('/data/kcci', async (req, res) => {
+    const data = await fetchKcciData();
+    res.json(data);
+});
+
+app.get('/bdi-difference', async (req, res) => {
+    const result = await fetchBdiData();
+    if (result !== null) {
+        res.json(result);
+    } else {
+        res.status(500).send('Failed to fetch BDI data');
+    }
+});
+
+app.get('/data/:type', async (req, res) => {
+    const type = req.params.type.toUpperCase();
+    const url = urls[type];
+    if (url) {
+        const data = await fetchData(type, url);
+        res.json(data);
+    } else {
+        res.status(404).send('Invalid data type');
+    }
+});
+
 
 
 // Serve index.html for all routes to support client-side routing
