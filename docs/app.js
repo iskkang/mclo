@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function fetchData(endpoint) {
-    const BASE_URL = 'http://localhost:4000/';
+    const BASE_URL = 'http://localhost:3000/';
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, {
             headers: {
