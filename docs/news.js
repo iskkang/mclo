@@ -3,9 +3,14 @@ let currentPage = 1;
 const articlesPerPage = 5;
 
 async function fetchNews(keyword) {
-    const url = `/api/news?q=${keyword}&hl=ko&gl=KR&ceid=KR:ko`;
+    const url = `/api/news/search?q=${keyword}&hl=ko&gl=KR&ceid=KR:ko`;
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            }
+        });
         if (response.ok) {
             const html = await response.text();
             const parser = new DOMParser();
@@ -68,3 +73,7 @@ function displayNews(doc, append = false) {
         moreButton.style.display = 'none';
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadNews('해상운임'); // Load initial news category
+});
