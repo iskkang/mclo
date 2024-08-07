@@ -31,7 +31,10 @@ app.use(
         target: 'https://news.google.com',
         changeOrigin: true,
         pathRewrite: {
-            '^/api/news': '/search'
+            '^/api/news': '',
+        },
+         onProxyReq: (proxyReq, req, res) => {
+            proxyReq.setHeader('origin', 'https://news.google.com');
         },
     })
 );
