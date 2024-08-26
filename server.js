@@ -7,6 +7,7 @@ const axios = require('axios');
 const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const fetchAndExtractData = require('./docs/fetchDisaster');
+const { JSDOM } = require('jsdom');
 
 // Initialize the app
 const app = express();
@@ -38,6 +39,42 @@ app.use(
         },
     })
 );
+
+app.get('/api/insight', async (req, res) => {
+    try {
+        const targetUrl = 'https://www.haesainfo.com/news/articleList.html?sc_section_code=S1N12&view_type=sm';
+
+        // Fetch the HTML content from the target URL
+        const response = await axios.get(targetUrl);
+        const html = response.data;
+
+        // Use JSDOM to parse the HTML content
+        const dom = new JSDOM(html);
+        const { document } = dom.window;
+
+        // Extract the top 5 news articles from the document
+        const articles = document.querySelectorAll('#section-list ul.type1 li');
+        const topArticles = [];
+
+        articles.forEach((article, index) => {
+            if (index < 5) {
+                const titleElement = article.querySelector('h4.titles a');
+                const title = titleElement.textContent.trim();
+                const link = 'https://www.haesainfo.com' + titleElement.getAttribute('href');
+                const dateElement = article.querySelector('em.info.dated');
+                const date = dateElement.textContent.trim();
+
+                topArticles.push({ title, link, date });
+            }
+        });
+
+        res.json(topArticles);
+
+    } catch (error) {
+        console.error('Failed to fetch news articles:', error);
+        res.status(500).send('Failed to fetch news articles');
+    }
+});
 
 // Fetch data functions
 const fetchGlobalExports = async () => {
