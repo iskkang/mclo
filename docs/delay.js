@@ -32,7 +32,7 @@ function renderChart(chartData) {
             data: chartData.map(item => item['Previous delays'])
         },
         {
-            name: 'Port operational reasons',
+            name: 'Port operational',
             type: 'line',
             stack: 'Total',
             areaStyle: {},
