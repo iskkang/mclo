@@ -8,7 +8,7 @@ async function fetchDelayData() {
         const response = await fetch(url);
         if (response.ok) {
             const data = await response.json();
-            return data;
+            return data.plots[0];  // Access the first plot, which contains the time series data
         } else {
             console.error('Failed to fetch data:', response.status);
         }
@@ -22,24 +22,25 @@ async function loadDelayChart() {
     const delayData = await fetchDelayData();
     if (!delayData) return;
 
-    // Example processing of data (adjust according to actual JSON structure)
-    const categories = delayData.x_axis;  // X-axis labels (e.g., years)
-    const seriesData = delayData.series;  // Y-axis series (e.g., delay reasons)
+    const labels = delayData.data.map(item => item.Date);  // Dates for the x-axis
+    const series = delayData.series;
 
     // Prepare the datasets for Chart.js
-    const datasets = seriesData.map((series, index) => ({
-        label: series.name,
-        data: series.data,
-        backgroundColor: getColorByIndex(index),  // Function to get colors for each dataset
-        fill: true,
-    }));
+    const datasets = series.map((seriesItem) => {
+        return {
+            label: seriesItem.name,
+            data: delayData.data.map(item => item[seriesItem.code]),  // Extract data for each series
+            backgroundColor: getColorByName(seriesItem.name),  // Assign a color to each series
+            fill: true,
+        };
+    });
 
     // Create the chart
     const ctx = document.getElementById('delayChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',  // Use 'line' type for stacked area chart
         data: {
-            labels: categories,
+            labels: labels,
             datasets: datasets,
         },
         options: {
@@ -48,11 +49,11 @@ async function loadDelayChart() {
                 x: {
                     title: {
                         display: true,
-                        text: 'Year'
+                        text: 'Date'
                     }
                 },
                 y: {
-                    stacked: true,
+                    stacked: true,  // Stack the datasets
                     title: {
                         display: true,
                         text: 'Percentage (%)'
@@ -73,14 +74,14 @@ async function loadDelayChart() {
     });
 }
 
-// Helper function to get color by index for each dataset
-function getColorByIndex(index) {
-    const colors = [
-        'rgba(255, 99, 132, 0.5)',  // red for 'Previous delays'
-        'rgba(255, 159, 64, 0.5)',  // orange for 'Port operational reasons'
-        'rgba(75, 192, 192, 0.5)',  // green for 'Weather'
-        'rgba(54, 162, 235, 0.5)',  // blue for 'Others'
-        'rgba(153, 102, 255, 0.5)', // purple for 'On time'
-    ];
-    return colors[index % colors.length];
+// Helper function to assign a color based on the series name
+function getColorByName(name) {
+    const colors = {
+        'Previous delays': 'rgba(255, 99, 132, 0.5)',  // red
+        'Port operational reasons': 'rgba(255, 159, 64, 0.5)',  // orange
+        'Weather': 'rgba(75, 192, 192, 0.5)',  // green
+        'Others': 'rgba(54, 162, 235, 0.5)',  // blue
+        'On time': 'rgba(153, 102, 255, 0.5)'  // purple
+    };
+    return colors[name] || 'rgba(0, 0, 0, 0.5)';  // Default color (black) if no match
 }
