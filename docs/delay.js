@@ -1,87 +1,109 @@
-document.addEventListener('DOMContentLoaded', () => {
-    loadDelayChart();
-});
-
-async function fetchDelayData() {
-    const url = 'https://www.econdb.com/widgets/portcall-timeliness/data/';
+async function fetchData() {
     try {
-        const response = await fetch(url);
-        if (response.ok) {
-            const data = await response.json();
-            return data.plots[0];  // Access the first plot, which contains the time series data
-        } else {
-            console.error('Failed to fetch data:', response.status);
+        const response = await fetch('https://www.econdb.com/widgets/portcall-timeliness/data/');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        return data;
+
     } catch (error) {
-        console.error('Error fetching delay data:', error);
+        console.error('Failed to fetch data:', error);
+        return null;
     }
-    return null;
 }
 
-async function loadDelayChart() {
-    const delayData = await fetchDelayData();
-    if (!delayData) return;
+function filterDataByDate(data, startDate) {
+    return data.filter(item => new Date(item.Date) >= new Date(startDate));
+}
 
-    const labels = delayData.data.map(item => item.Date);  // Dates for the x-axis
-    const series = delayData.series;
+function renderChart(chartData) {
+    const chartContainer = document.getElementById('delay-chart');
+    const chart = echarts.init(chartContainer);
 
-    // Prepare the datasets for Chart.js
-    const datasets = series.map((seriesItem) => {
-        return {
-            label: seriesItem.name,
-            data: delayData.data.map(item => item[seriesItem.code]),  // Extract data for each series
-            backgroundColor: getColorByName(seriesItem.name),  // Assign a color to each series
-            fill: true,
-        };
-    });
-
-    // Create the chart
-    const ctx = document.getElementById('delayChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',  // Use 'line' type for stacked area chart
-        data: {
-            labels: labels,
-            datasets: datasets,
+    const seriesData = [
+        {
+            name: 'Previous delays',
+            type: 'line',
+            stack: 'Total',
+            areaStyle: {},
+            data: chartData.map(item => item['Previous delays'])
         },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
-                    }
-                },
-                y: {
-                    stacked: true,  // Stack the datasets
-                    title: {
-                        display: true,
-                        text: 'Percentage (%)'
-                    },
-                    ticks: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom'
-                }
-            }
+        {
+            name: 'Port operational reasons',
+            type: 'line',
+            stack: 'Total',
+            areaStyle: {},
+            data: chartData.map(item => item['Port operational reasons'])
+        },
+        {
+            name: 'Weather',
+            type: 'line',
+            stack: 'Total',
+            areaStyle: {},
+            data: chartData.map(item => item['Weather'])
+        },
+        {
+            name: 'Others',
+            type: 'line',
+            stack: 'Total',
+            areaStyle: {},
+            data: chartData.map(item => item['Others'])
+        },
+        {
+            name: 'On time',
+            type: 'line',
+            stack: 'Total',
+            areaStyle: {},
+            data: chartData.map(item => item['On time'])
         }
-    });
+    ];
+
+    const option = {
+
+        tooltip: {
+            trigger: 'axis',
+            formatter: function (params) {
+                let result = `${params[0].name}<br/>`;
+                params.forEach(param => {
+                    result += `${param.marker} ${param.seriesName}: ${param.value.toFixed(2)}%<br/>`;
+                });
+                return result;
+            }
+        },
+        legend: {
+            data: ['Previous delays', 'Port operational', 'Weather', 'Others', 'On time']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: chartData.map(item => item['Date'])
+        },
+        yAxis: {
+            type: 'value',
+            max: 100 // Set the maximum value of the yAxis to 100
+        },
+        series: seriesData
+    };
+
+    chart.setOption(option);
 }
 
-// Helper function to assign a color based on the series name
-function getColorByName(name) {
-    const colors = {
-        'Previous delays': 'rgba(255, 99, 132, 0.5)',  // red
-        'Port operational reasons': 'rgba(255, 159, 64, 0.5)',  // orange
-        'Weather': 'rgba(75, 192, 192, 0.5)',  // green
-        'Others': 'rgba(54, 162, 235, 0.5)',  // blue
-        'On time': 'rgba(153, 102, 255, 0.5)'  // purple
-    };
-    return colors[name] || 'rgba(0, 0, 0, 0.5)';  // Default color (black) if no match
-}
+document.addEventListener('DOMContentLoaded', async () => {
+    const data = await fetchData();
+    if (data && data.plots && data.plots[0].data) {
+        // Filter data from 2023-01-01 onward
+        const filteredData = filterDataByDate(data.plots[0].data, '2023-01-01');
+        renderChart(filteredData);
+    } else {
+        console.error('Failed to load chart data');
+    }
+});
